@@ -3,7 +3,7 @@ import { supabase } from './supabaseClient'
 import {
   FLAGS, ALL_TEAMS, POINT_RULES,
   GROUP_MATCHES, KNOCKOUT_STAGES, KNOCKOUT_ROUNDS,
-  isLocked, calcPoints
+  isLocked, isSpecialsLocked, calcPoints
 } from './data'
 
 // ─── STYLES ──────────────────────────────────────────────────────────────────
@@ -378,7 +378,7 @@ export default function App() {
   if (screen === "predictions") {
     const ptabs = [{id:"grupos",label:"⚽ Grupos"},{id:"eliminatorias",label:"🔥 Eliminatorias"},{id:"especiales",label:"🌟 Especiales"}]
     const groupRounds = ["GR1","GR2","GR3"]
-    const roundLabels = {GR1:"Jornada 1",GR2:"Jornada 2",GR3:"Jornada 3"}
+    const roundLabels = {GR1:"Jornada 1 (11-18 jun)",GR2:"Jornada 2 (18-24 jun)",GR3:"Jornada 3 (24-28 jun)"}
     return (
       <div style={S.app}>
         <div style={{background:"rgba(0,0,0,0.4)",padding:"12px 16px",display:"flex",alignItems:"center",gap:12,borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
@@ -446,13 +446,24 @@ export default function App() {
 
           {tab==="especiales" && (
             <div>
+              {isSpecialsLocked() && (
+                <div style={{background:"rgba(232,85,85,0.1)",border:"1px solid rgba(232,85,85,0.3)",borderRadius:12,padding:"10px 14px",marginBottom:16}}>
+                  <p style={{margin:0,fontSize:13,color:"#e85555"}}>🔒 Las predicciones especiales están cerradas — el Mundial ya comenzó.</p>
+                </div>
+              )}
+              {!isSpecialsLocked() && (
+                <div style={{background:"rgba(245,200,66,0.08)",border:"1px solid rgba(245,200,66,0.2)",borderRadius:12,padding:"10px 14px",marginBottom:16}}>
+                  <p style={{margin:0,fontSize:12,color:"#f5c842"}}>⏰ Se cierra el <strong>11 de junio a las 3:00 PM</strong> hora Costa Rica.</p>
+                </div>
+              )}
               <p style={{margin:"0 0 12px",fontSize:11,letterSpacing:3,color:"#f5c842",textTransform:"uppercase"}}>🏆 Campeón del Mundo (+{POINT_RULES.campeon} pts)</p>
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(100px,1fr))",gap:6,marginBottom:24}}>
                 {ALL_TEAMS.map(t=>{
                   const sel=specialPred.champion===t
+                  const locked=isSpecialsLocked()
                   return (
-                    <button key={t} onClick={()=>saveSpecial("champion",sel?null:t)}
-                      style={{padding:"9px 5px",borderRadius:12,border:sel?"2px solid #f5c842":"1px solid rgba(255,255,255,0.08)",background:sel?"rgba(245,200,66,0.15)":"rgba(255,255,255,0.04)",color:"#fff",cursor:"pointer",textAlign:"center"}}>
+                    <button key={t} onClick={()=>!locked&&saveSpecial("champion",sel?null:t)}
+                      style={{padding:"9px 5px",borderRadius:12,border:sel?"2px solid #f5c842":"1px solid rgba(255,255,255,0.08)",background:sel?"rgba(245,200,66,0.15)":"rgba(255,255,255,0.04)",color:"#fff",cursor:locked?"not-allowed":"pointer",textAlign:"center",opacity:locked&&!sel?0.5:1}}>
                       <div style={{fontSize:22}}>{FLAGS[t]||"🏳️"}</div>
                       <div style={{fontSize:10,marginTop:4,color:sel?"#f5c842":"#ccc",fontWeight:sel?700:400}}>{t}</div>
                     </button>
@@ -461,9 +472,10 @@ export default function App() {
               </div>
               <p style={{margin:"0 0 10px",fontSize:11,letterSpacing:3,color:"#f5c842",textTransform:"uppercase"}}>👟 Goleador del Torneo (+{POINT_RULES.goleador} pts)</p>
               <div style={S.card}>
-                <input value={specialPred.top_scorer||""} onChange={e=>saveSpecial("top_scorer",e.target.value)}
+                <input value={specialPred.top_scorer||""} onChange={e=>!isSpecialsLocked()&&saveSpecial("top_scorer",e.target.value)}
+                  disabled={isSpecialsLocked()}
                   placeholder="Ej: Mbappé, Vinicius Jr..."
-                  style={S.input}/>
+                  style={{...S.input, opacity:isSpecialsLocked()?0.5:1, cursor:isSpecialsLocked()?"not-allowed":"text"}}/>
                 {specialPred.top_scorer&&<p style={{margin:"8px 0 0",fontSize:12,color:"#aac4e0"}}>Tu goleador: <strong style={{color:"#fff"}}>{specialPred.top_scorer}</strong></p>}
               </div>
             </div>
