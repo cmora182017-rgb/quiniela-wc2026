@@ -620,9 +620,13 @@ export default function App() {
                 </div>
                 <div style={{display:"flex",gap:6,marginTop:8,alignItems:"center"}}>
                   <span style={{fontSize:11,color:"#4cdc6a",whiteSpace:"nowrap"}}>⚽ 1er gol:</span>
-                  <input value={results[m.id]?.scorer||""} onChange={e=>saveResult(m.id,{home_score:results[m.id]?.home_score??null,away_score:results[m.id]?.away_score??null,scorer:e.target.value})}
-                    placeholder="Nombre del primer goleador"
-                    style={{flex:1,padding:"4px 8px",borderRadius:8,border:"1px solid rgba(76,220,106,0.3)",background:"rgba(76,220,106,0.08)",color:"#4cdc6a",fontSize:11,outline:"none"}}/>
+                  <select value={results[m.id]?.scorer||""} onChange={e=>saveResult(m.id,{home_score:results[m.id]?.home_score??null,away_score:results[m.id]?.away_score??null,scorer:e.target.value})}
+                    style={{flex:1,padding:"4px 8px",borderRadius:8,border:"1px solid rgba(76,220,106,0.3)",background:"#0d1b2a",color:results[m.id]?.scorer?"#4cdc6a":"#6a8caa",fontSize:11,outline:"none"}}>
+                    <option value="">— Seleccionar goleador —</option>
+                    {[...(SQUADS[m.home]||[]), ...(SQUADS[m.away]||[])].sort().map(p=>(
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             )
