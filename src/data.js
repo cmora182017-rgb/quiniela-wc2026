@@ -58,10 +58,10 @@ export const GROUP_MATCHES = [
   { id:"GM007", group:"C", home:"Haití",           away:"Escocia",        kickoff:"2026-06-14T01:00:00Z", round:"GR1" },
   { id:"GM008", group:"D", home:"Australia",       away:"Turquía",        kickoff:"2026-06-14T04:00:00Z", round:"GR1" },
   // Domingo 14 jun
-  { id:"GM009", group:"E", home:"Alemania",        away:"Curazao",        kickoff:"2026-06-14T19:00:00Z", round:"GR1" },
-  { id:"GM010", group:"F", home:"Países Bajos",    away:"Japón",          kickoff:"2026-06-14T22:00:00Z", round:"GR1" },
-  { id:"GM011", group:"E", home:"Costa de Marfil", away:"Ecuador",        kickoff:"2026-06-15T01:00:00Z", round:"GR1" },
-  { id:"GM012", group:"F", home:"Túnez",           away:"Suecia",    kickoff:"2026-06-15T04:00:00Z", round:"GR1" },
+  { id:"GM009", group:"E", home:"Alemania",        away:"Curazao",        kickoff:"2026-06-14T17:00:00Z", round:"GR1" },
+  { id:"GM010", group:"F", home:"Países Bajos",    away:"Japón",          kickoff:"2026-06-14T20:00:00Z", round:"GR1" },
+  { id:"GM011", group:"E", home:"Costa de Marfil", away:"Ecuador",        kickoff:"2026-06-14T23:00:00Z", round:"GR1" },
+  { id:"GM012", group:"F", home:"Túnez",           away:"Suecia",    kickoff:"2026-06-15T02:00:00Z", round:"GR1" },
   // Lunes 15 jun
   { id:"GM013", group:"H", home:"España",          away:"Cabo Verde",     kickoff:"2026-06-15T19:00:00Z", round:"GR1" },
   { id:"GM014", group:"G", home:"Bélgica",         away:"Egipto",         kickoff:"2026-06-15T22:00:00Z", round:"GR1" },
