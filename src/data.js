@@ -201,7 +201,9 @@ export function isSpecialsLocked() {
 }
 
 export function isLocked(kickoffISO) {
-  return new Date() >= new Date(kickoffISO)
+  const kickoff = new Date(kickoffISO)
+  const lockTime = new Date(kickoff.getTime() - 15 * 60 * 1000) // 15 min antes
+  return new Date() >= lockTime
 }
 
 export function calcPoints(pred, res, isKnockout = false) {
