@@ -56,17 +56,17 @@ export const GROUP_MATCHES = [
   { id:"GM005", group:"B", home:"Qatar",           away:"Suiza",          kickoff:"2026-06-13T19:00:00Z", round:"GR1" },
   { id:"GM006", group:"C", home:"Brasil",          away:"Marruecos",      kickoff:"2026-06-13T22:00:00Z", round:"GR1" },
   { id:"GM007", group:"C", home:"Haití",           away:"Escocia",        kickoff:"2026-06-14T01:00:00Z", round:"GR1" },
-  { id:"GM008", group:"D", home:"Australia",       away:"Turquía",        kickoff:"2026-06-14T04:00:00Z", round:"GR1" },
+  { id:"GM008", group:"D", home:"Australia",       away:"Turquía",        kickoff:"2026-06-15T04:00:00Z", round:"GR1" },
   // Domingo 14 jun
   { id:"GM009", group:"E", home:"Alemania",        away:"Curazao",        kickoff:"2026-06-14T17:00:00Z", round:"GR1" },
   { id:"GM010", group:"F", home:"Países Bajos",    away:"Japón",          kickoff:"2026-06-14T20:00:00Z", round:"GR1" },
   { id:"GM011", group:"E", home:"Costa de Marfil", away:"Ecuador",        kickoff:"2026-06-14T23:00:00Z", round:"GR1" },
   { id:"GM012", group:"F", home:"Túnez",           away:"Suecia",    kickoff:"2026-06-15T02:00:00Z", round:"GR1" },
   // Lunes 15 jun
-  { id:"GM013", group:"H", home:"España",          away:"Cabo Verde",     kickoff:"2026-06-15T19:00:00Z", round:"GR1" },
-  { id:"GM014", group:"G", home:"Bélgica",         away:"Egipto",         kickoff:"2026-06-15T22:00:00Z", round:"GR1" },
-  { id:"GM015", group:"H", home:"Arabia Saudita",  away:"Uruguay",        kickoff:"2026-06-16T00:00:00Z", round:"GR1" },
-  { id:"GM016", group:"G", home:"Irán",            away:"Nueva Zelanda",  kickoff:"2026-06-16T04:00:00Z", round:"GR1" },
+  { id:"GM013", group:"H", home:"España",          away:"Cabo Verde",     kickoff:"2026-06-15T16:00:00Z", round:"GR1" },
+  { id:"GM014", group:"G", home:"Bélgica",         away:"Egipto",         kickoff:"2026-06-15T19:00:00Z", round:"GR1" },
+  { id:"GM015", group:"H", home:"Arabia Saudita",  away:"Uruguay",        kickoff:"2026-06-15T22:00:00Z", round:"GR1" },
+  { id:"GM016", group:"G", home:"Irán",            away:"Nueva Zelanda",  kickoff:"2026-06-16T01:00:00Z", round:"GR1" },
   // Martes 16 jun
   { id:"GM017", group:"I", home:"Francia",         away:"Senegal",        kickoff:"2026-06-16T19:00:00Z", round:"GR1" },
   { id:"GM018", group:"I", home:"Iraq",     away:"Noruega",        kickoff:"2026-06-16T22:00:00Z", round:"GR1" },
@@ -74,40 +74,40 @@ export const GROUP_MATCHES = [
   { id:"GM020", group:"J", home:"Austria",         away:"Jordania",       kickoff:"2026-06-17T04:00:00Z", round:"GR1" },
   // Miércoles 17 jun
   { id:"GM021", group:"K", home:"Portugal",        away:"DR Congo",    kickoff:"2026-06-17T19:00:00Z", round:"GR1" },
-  { id:"GM022", group:"L", home:"Inglaterra",      away:"Croacia",        kickoff:"2026-06-17T22:00:00Z", round:"GR1" },
-  { id:"GM023", group:"L", home:"Ghana",           away:"Panamá",         kickoff:"2026-06-18T01:00:00Z", round:"GR1" },
-  { id:"GM024", group:"K", home:"Uzbekistán",      away:"Colombia",       kickoff:"2026-06-18T04:00:00Z", round:"GR1" },
+  { id:"GM022", group:"L", home:"Inglaterra",      away:"Croacia",        kickoff:"2026-06-17T20:00:00Z", round:"GR1" },
+  { id:"GM023", group:"L", home:"Ghana",           away:"Panamá",         kickoff:"2026-06-17T23:00:00Z", round:"GR1" },
+  { id:"GM024", group:"K", home:"Uzbekistán",      away:"Colombia",       kickoff:"2026-06-18T02:00:00Z", round:"GR1" },
 
   // ── JORNADA 2 ──────────────────────────────────────────────────────────────
   // Jueves 18 jun
-  { id:"GM025", group:"A", home:"Chequia",         away:"Sudáfrica",      kickoff:"2026-06-18T18:00:00Z", round:"GR2" },
+  { id:"GM025", group:"A", home:"Chequia",         away:"Sudáfrica",      kickoff:"2026-06-18T16:00:00Z", round:"GR2" },
   { id:"GM026", group:"B", home:"Suiza",           away:"Bosnia y Herz.", kickoff:"2026-06-18T19:00:00Z", round:"GR2" },
   { id:"GM027", group:"B", home:"Canadá",          away:"Qatar",          kickoff:"2026-06-18T22:00:00Z", round:"GR2" },
-  { id:"GM028", group:"A", home:"México",          away:"Corea del Sur",  kickoff:"2026-06-19T03:00:00Z", round:"GR2" },
+  { id:"GM028", group:"A", home:"México",          away:"Corea del Sur",  kickoff:"2026-06-19T01:00:00Z", round:"GR2" },
   // Viernes 19 jun
   { id:"GM029", group:"D", home:"USA",             away:"Australia",      kickoff:"2026-06-19T19:00:00Z", round:"GR2" },
   { id:"GM030", group:"C", home:"Escocia",         away:"Marruecos",      kickoff:"2026-06-19T22:00:00Z", round:"GR2" },
-  { id:"GM031", group:"C", home:"Brasil",          away:"Haití",          kickoff:"2026-06-20T01:00:00Z", round:"GR2" },
-  { id:"GM032", group:"D", home:"Turquía",         away:"Paraguay",       kickoff:"2026-06-20T04:00:00Z", round:"GR2" },
+  { id:"GM031", group:"C", home:"Brasil",          away:"Haití",          kickoff:"2026-06-20T00:30:00Z", round:"GR2" },
+  { id:"GM032", group:"D", home:"Turquía",         away:"Paraguay",       kickoff:"2026-06-20T03:00:00Z", round:"GR2" },
   // Sábado 20 jun
   { id:"GM033", group:"F", home:"Países Bajos",    away:"Suecia",    kickoff:"2026-06-20T19:00:00Z", round:"GR2" },
-  { id:"GM034", group:"E", home:"Alemania",        away:"Costa de Marfil",kickoff:"2026-06-20T22:00:00Z", round:"GR2" },
+  { id:"GM034", group:"E", home:"Alemania",        away:"Costa de Marfil",kickoff:"2026-06-20T20:00:00Z", round:"GR2" },
   { id:"GM035", group:"E", home:"Ecuador",         away:"Curazao",        kickoff:"2026-06-21T00:00:00Z", round:"GR2" },
   { id:"GM036", group:"F", home:"Túnez",           away:"Japón",          kickoff:"2026-06-21T04:00:00Z", round:"GR2" },
   // Domingo 21 jun
-  { id:"GM037", group:"H", home:"España",          away:"Arabia Saudita", kickoff:"2026-06-21T18:00:00Z", round:"GR2" },
+  { id:"GM037", group:"H", home:"España",          away:"Arabia Saudita", kickoff:"2026-06-21T16:00:00Z", round:"GR2" },
   { id:"GM038", group:"G", home:"Bélgica",         away:"Irán",           kickoff:"2026-06-21T19:00:00Z", round:"GR2" },
   { id:"GM039", group:"H", home:"Uruguay",         away:"Cabo Verde",     kickoff:"2026-06-21T22:00:00Z", round:"GR2" },
   { id:"GM040", group:"G", home:"Nueva Zelanda",   away:"Egipto",         kickoff:"2026-06-22T01:00:00Z", round:"GR2" },
   // Lunes 22 jun
-  { id:"GM041", group:"J", home:"Argentina",       away:"Austria",        kickoff:"2026-06-22T19:00:00Z", round:"GR2" },
+  { id:"GM041", group:"J", home:"Argentina",       away:"Austria",        kickoff:"2026-06-22T17:00:00Z", round:"GR2" },
   { id:"GM042", group:"I", home:"Francia",         away:"Iraq",    kickoff:"2026-06-22T23:00:00Z", round:"GR2" },
   { id:"GM043", group:"I", home:"Noruega",         away:"Senegal",        kickoff:"2026-06-23T00:00:00Z", round:"GR2" },
   { id:"GM044", group:"J", home:"Jordania",        away:"Algeria",        kickoff:"2026-06-23T03:00:00Z", round:"GR2" },
   // Martes 23 jun
-  { id:"GM045", group:"K", home:"Portugal",        away:"Uzbekistán",     kickoff:"2026-06-23T19:00:00Z", round:"GR2" },
-  { id:"GM046", group:"L", home:"Inglaterra",      away:"Ghana",          kickoff:"2026-06-23T22:00:00Z", round:"GR2" },
-  { id:"GM047", group:"L", home:"Panamá",          away:"Croacia",        kickoff:"2026-06-24T01:00:00Z", round:"GR2" },
+  { id:"GM045", group:"K", home:"Portugal",        away:"Uzbekistán",     kickoff:"2026-06-23T17:00:00Z", round:"GR2" },
+  { id:"GM046", group:"L", home:"Inglaterra",      away:"Ghana",          kickoff:"2026-06-23T20:00:00Z", round:"GR2" },
+  { id:"GM047", group:"L", home:"Panamá",          away:"Croacia",        kickoff:"2026-06-23T23:00:00Z", round:"GR2" },
   { id:"GM048", group:"K", home:"Colombia",        away:"DR Congo",    kickoff:"2026-06-24T04:00:00Z", round:"GR2" },
 
   // ── JORNADA 3 ──────────────────────────────────────────────────────────────
@@ -130,15 +130,15 @@ export const GROUP_MATCHES = [
   { id:"GM062", group:"I", home:"Senegal",         away:"Iraq",    kickoff:"2026-06-26T19:00:00Z", round:"GR3" },
   { id:"GM063", group:"H", home:"Cabo Verde",      away:"Arabia Saudita", kickoff:"2026-06-26T22:00:00Z", round:"GR3" },
   { id:"GM064", group:"H", home:"Uruguay",         away:"España",         kickoff:"2026-06-26T22:00:00Z", round:"GR3" },
-  { id:"GM065", group:"G", home:"Egipto",          away:"Irán",           kickoff:"2026-06-27T01:00:00Z", round:"GR3" },
-  { id:"GM066", group:"G", home:"Nueva Zelanda",   away:"Bélgica",        kickoff:"2026-06-27T01:00:00Z", round:"GR3" },
+  { id:"GM065", group:"G", home:"Egipto",          away:"Irán",           kickoff:"2026-06-27T03:00:00Z", round:"GR3" },
+  { id:"GM066", group:"G", home:"Nueva Zelanda",   away:"Bélgica",        kickoff:"2026-06-27T03:00:00Z", round:"GR3" },
   // Sábado 27 jun
   { id:"GM067", group:"L", home:"Panamá",          away:"Inglaterra",     kickoff:"2026-06-27T21:00:00Z", round:"GR3" },
   { id:"GM068", group:"L", home:"Croacia",         away:"Ghana",          kickoff:"2026-06-27T21:00:00Z", round:"GR3" },
-  { id:"GM069", group:"K", home:"Colombia",        away:"Portugal",       kickoff:"2026-06-28T01:30:00Z", round:"GR3" },
+  { id:"GM069", group:"K", home:"Colombia",        away:"Portugal",       kickoff:"2026-06-27T23:30:00Z", round:"GR3" },
   { id:"GM070", group:"K", home:"DR Congo",     away:"Uzbekistán",     kickoff:"2026-06-28T01:30:00Z", round:"GR3" },
-  { id:"GM071", group:"J", home:"Algeria",         away:"Austria",        kickoff:"2026-06-28T04:00:00Z", round:"GR3" },
-  { id:"GM072", group:"J", home:"Jordania",        away:"Argentina",      kickoff:"2026-06-28T04:00:00Z", round:"GR3" },
+  { id:"GM071", group:"J", home:"Algeria",         away:"Austria",        kickoff:"2026-06-28T02:00:00Z", round:"GR3" },
+  { id:"GM072", group:"J", home:"Jordania",        away:"Argentina",      kickoff:"2026-06-28T02:00:00Z", round:"GR3" },
 ]
 
 // ─── RONDAS ELIMINATORIAS ─────────────────────────────────────────────────────
