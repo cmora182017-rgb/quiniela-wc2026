@@ -138,6 +138,14 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 
 export default function App() {
+  // Auto-refresh every 5 minutes to ensure lock times are enforced
+  useEffect(() => {
+    const interval = setInterval(() => {
+      window.location.reload()
+    }, 5 * 60 * 1000) // 5 minutes
+    return () => clearInterval(interval)
+  }, [])
+
   const [session, setSession] = useState(null)
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
