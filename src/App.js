@@ -101,6 +101,11 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
         <div style={{textAlign:"center",fontSize:11,color:"#6a8caa",marginTop:5}}>
           Real: {result.home_score} – {result.away_score}
           {result.scorer && <span style={{marginLeft:8}}>⚽ {result.scorer}</span>}
+          {pred?.home_score != null && pred?.away_score != null && (() => {
+            const base = calcPoints({home_score:pred.home_score, away_score:pred.away_score}, result, isKnockout)
+            const matchPts = isJoker ? base * 2 : base
+            return matchPts > 0 ? <span style={{marginLeft:8,color:"#4cdc6a",fontWeight:700}}>✅+{matchPts}</span> : <span style={{marginLeft:8,color:"#e85555"}}>❌</span>
+          })()}
         </div>
       )}
       {/* Scorer dropdown */}
@@ -125,7 +130,16 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
         </div>
       )}
       {locked && pred?.scorer && (
-        <div style={{fontSize:11,color:"#ff9500",marginTop:6}}>⚽ Tu 1er gol: <strong>{pred.scorer}</strong></div>
+        <div style={{fontSize:11,color:"#ff9500",marginTop:6,display:"flex",alignItems:"center",gap:6}}>
+          ⚽ Tu 1er gol: <strong>{pred.scorer}</strong>
+          {result?.scorer && (
+            <span style={{fontSize:10,fontWeight:700,color: pred.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim()?"#4cdc6a":"#e85555"}}>
+              {pred.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim()
+                ? `✅+${isJoker ? POINT_RULES.primerGol * 2 : POINT_RULES.primerGol}`
+                : "❌"}
+            </span>
+          )}
+        </div>
       )}
       {locked && onViewPreds && (
         <button onClick={onViewPreds}
