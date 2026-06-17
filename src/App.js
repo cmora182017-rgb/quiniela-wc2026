@@ -774,7 +774,7 @@ export default function App() {
             : preds.map((p,i) => {
                 const base = calcPoints({home_score:p.home_score,away_score:p.away_score}, result, isKo)
                 const pts = p.is_joker ? base*2 : base
-                const scorerPts = p.scorer && result?.scorer && p.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim() ? 5 : 0
+                const scorerPts = p.scorer && result?.scorer && p.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim() ? (p.is_joker ? POINT_RULES.primerGol * 2 : POINT_RULES.primerGol) : 0
                 const ptColor = pts > 0 ? "#4cdc6a" : "#e85555"
                 return (
                   <div key={i} style={{background:"rgba(255,255,255,0.05)",borderRadius:12,padding:"12px 14px",border:`1px solid ${p.name===session.user.email||allProfiles.find(pr=>pr.id===session.user.id)?.name===p.name?"rgba(245,200,66,0.4)":"rgba(255,255,255,0.08)"}`}}>
