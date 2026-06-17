@@ -617,8 +617,26 @@ export default function App() {
       <p style={{color:"#6a8caa",fontSize:12,marginBottom:18}}>Se actualiza con cada resultado</p>
       {leaderboard.length===0
         ? <p style={{color:"#6a8caa",textAlign:"center",marginTop:60}}>Cargando...</p>
-        : leaderboard.map((p,i)=>(
-          <div key={p.id} style={{display:"flex",alignItems:"center",gap:13,...S.card,border:i===0?"1px solid rgba(245,200,66,0.3)":S.card.border}}>
+        : leaderboard.map((p,i)=>{
+          const isFirst = i===0
+          const isLast = i===leaderboard.length-1 && leaderboard.length>1
+          return (
+          <div key={p.id} style={{
+            display:"flex",alignItems:"center",gap:13,...S.card,
+            border:isFirst?"1px solid rgba(245,200,66,0.5)":isLast?"1px solid rgba(232,85,85,0.4)":S.card.border,
+            background:isFirst?"linear-gradient(135deg, rgba(245,200,66,0.08), rgba(255,255,255,0.04))":isLast?"linear-gradient(135deg, rgba(232,85,85,0.06), rgba(255,255,255,0.04))":S.card.background,
+            position:"relative"
+          }}>
+            {isFirst && (
+              <div style={{position:"absolute",top:-10,right:14,background:"#f5c842",color:"#1a1100",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
+                🐐 EL GOAT
+              </div>
+            )}
+            {isLast && (
+              <div style={{position:"absolute",top:-10,right:14,background:"#e85555",color:"#fff",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
+                🦵 EL MANCO
+              </div>
+            )}
             <span style={{fontSize:24,width:28,textAlign:"center"}}>{getMedal(i)}</span>
             <div style={{flex:1}}>
               <div style={{fontWeight:700,fontSize:15}}>{p.name}{p.id===session.user.id&&<span style={{fontSize:11,color:"#f5c842",marginLeft:6}}>← vos</span>}</div>
@@ -627,13 +645,15 @@ export default function App() {
                 {p.topScorer&&<span style={{marginLeft:8}}>👟 {p.topScorer}</span>}
                 {p.jokerBonus>0&&<span style={{marginLeft:8,color:"#ff9500"}}>🃏 +{p.jokerBonus}</span>}
               </div>
+              {isFirst && <div style={{fontSize:10,color:"#f5c842",marginTop:3,fontStyle:"italic"}}>Tiene línea directa con la FIFA ☎️</div>}
+              {isLast && <div style={{fontSize:10,color:"#e85555",marginTop:3,fontStyle:"italic"}}>Ni el VAR lo salva 🚩</div>}
             </div>
             <div style={{textAlign:"right"}}>
-              <div style={{fontSize:22,fontWeight:900,color:i===0?"#f5c842":"#fff"}}>{p.points}</div>
+              <div style={{fontSize:22,fontWeight:900,color:isFirst?"#f5c842":isLast?"#e85555":"#fff"}}>{p.points}</div>
               <div style={{fontSize:11,color:"#6a8caa"}}>pts</div>
             </div>
           </div>
-        ))
+        )})
       }
     </div>
   )
