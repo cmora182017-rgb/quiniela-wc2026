@@ -277,16 +277,22 @@ export default function App() {
         pts += earned
         if (pred?.is_joker && base > 0) jokerBonus += base
       })
-      // Primer Gol por partido
+      // Primer Gol por partido (con comodín si aplica)
       GROUP_MATCHES.forEach(m => {
         const pred = userPreds[m.id]
         const res = resMap[m.id]
-        if (pred?.scorer && res?.scorer && pred.scorer.toLowerCase().trim() === res.scorer.toLowerCase().trim()) pts += POINT_RULES.primerGol
+        if (pred?.scorer && res?.scorer && pred.scorer.toLowerCase().trim() === res.scorer.toLowerCase().trim()) {
+          const scorerPts = pred?.is_joker ? POINT_RULES.primerGol * 2 : POINT_RULES.primerGol
+          pts += scorerPts
+        }
       })
       KNOCKOUT_STAGES.forEach(s => {
         const pred = userKoPreds[s.id]
         const res = resMap[s.id]
-        if (pred?.scorer && res?.scorer && pred.scorer.toLowerCase().trim() === res.scorer.toLowerCase().trim()) pts += POINT_RULES.primerGol
+        if (pred?.scorer && res?.scorer && pred.scorer.toLowerCase().trim() === res.scorer.toLowerCase().trim()) {
+          const scorerPts = pred?.is_joker ? POINT_RULES.primerGol * 2 : POINT_RULES.primerGol
+          pts += scorerPts
+        }
       })
       if (userSp.champion && spR.champion && userSp.champion === spR.champion) pts += POINT_RULES.campeon
       if (userSp.top_scorer && spR.top_scorer && userSp.top_scorer.toLowerCase().trim() === spR.top_scorer.toLowerCase().trim()) pts += POINT_RULES.goleador
