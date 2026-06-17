@@ -117,7 +117,9 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
           </select>
           {pred?.scorer && result?.scorer && (
             <span style={{fontSize:10,color: pred.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim()?"#4cdc6a":"#e85555",fontWeight:700}}>
-              {pred.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim()?"✅+5":"❌"}
+              {pred.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim()
+                ? `✅+${isJoker ? POINT_RULES.primerGol * 2 : POINT_RULES.primerGol}`
+                : "❌"}
             </span>
           )}
         </div>
