@@ -646,7 +646,7 @@ export default function App() {
             )}
             {isLast && (
               <div style={{position:"absolute",top:-10,right:14,background:"#e85555",color:"#fff",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
-                🦵 EL MANCO
+                🦥 EL LEO-PARDO LENTO
               </div>
             )}
             <span style={{fontSize:24,width:28,textAlign:"center"}}>{getMedal(i)}</span>
@@ -658,7 +658,7 @@ export default function App() {
                 {p.jokerBonus>0&&<span style={{marginLeft:8,color:"#ff9500"}}>🃏 +{p.jokerBonus}</span>}
               </div>
               {isFirst && <div style={{fontSize:10,color:"#f5c842",marginTop:3,fontStyle:"italic"}}>Tiene línea directa con la FIFA ☎️</div>}
-              {isLast && <div style={{fontSize:10,color:"#e85555",marginTop:3,fontStyle:"italic"}}>Ni el VAR lo salva 🚩</div>}
+              {isLast && <div style={{fontSize:10,color:"#e85555",marginTop:3,fontStyle:"italic"}}>Ni rugiendo se mueve de ahí 🦁</div>}
             </div>
             <div style={{textAlign:"right"}}>
               <div style={{fontSize:22,fontWeight:900,color:isFirst?"#f5c842":isLast?"#e85555":"#fff"}}>{p.points}</div>
