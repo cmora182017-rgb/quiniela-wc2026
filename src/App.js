@@ -641,7 +641,7 @@ export default function App() {
           }}>
             {isFirst && (
               <div style={{position:"absolute",top:-10,right:14,background:"#f5c842",color:"#1a1100",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
-                🐐 EL GOAT
+                🐔 GALLINA CIEGA
               </div>
             )}
             {isLast && (
@@ -657,7 +657,7 @@ export default function App() {
                 {p.topScorer&&<span style={{marginLeft:8}}>👟 {p.topScorer}</span>}
                 {p.jokerBonus>0&&<span style={{marginLeft:8,color:"#ff9500"}}>🃏 +{p.jokerBonus}</span>}
               </div>
-              {isFirst && <div style={{fontSize:10,color:"#f5c842",marginTop:3,fontStyle:"italic"}}>Tiene línea directa con la FIFA ☎️</div>}
+              {isFirst && <div style={{fontSize:10,color:"#f5c842",marginTop:3,fontStyle:"italic"}}>Picoteó al azar y le pegó a todo 🎯</div>}
               {isLast && <div style={{fontSize:10,color:"#e85555",marginTop:3,fontStyle:"italic"}}>Ni rugiendo se mueve de ahí 🦁</div>}
             </div>
             <div style={{textAlign:"right"}}>
