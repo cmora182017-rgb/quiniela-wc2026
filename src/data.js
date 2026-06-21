@@ -109,7 +109,7 @@ export const GROUP_MATCHES = [
   { id:"GM045", group:"K", home:"Portugal",        away:"Uzbekistán",     kickoff:"2026-06-23T17:00:00Z", round:"GR2" },
   { id:"GM046", group:"L", home:"Inglaterra",      away:"Ghana",          kickoff:"2026-06-23T20:00:00Z", round:"GR2" },
   { id:"GM047", group:"L", home:"Panamá",          away:"Croacia",        kickoff:"2026-06-23T23:00:00Z", round:"GR2" },
-  { id:"GM048", group:"K", home:"Colombia",        away:"DR Congo",    kickoff:"2026-06-24T04:00:00Z", round:"GR2" },
+  { id:"GM048", group:"K", home:"Colombia",        away:"DR Congo",    kickoff:"2026-06-24T02:00:00Z", round:"GR2" },
 
   // ── JORNADA 3 ──────────────────────────────────────────────────────────────
   // Miércoles 24 jun
