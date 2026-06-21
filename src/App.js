@@ -69,6 +69,9 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
       {isJoker && <div style={{ position:"absolute", top:-9, left:10, background:"linear-gradient(135deg,#ff9500,#ff6000)", borderRadius:20, padding:"1px 9px", fontSize:10, fontWeight:700, color:"#000" }}>🃏 COMODÍN ×2</div>}
       {locked && <div style={{ position:"absolute", top:-9, right:10, background:"rgba(100,100,120,0.9)", borderRadius:20, padding:"1px 9px", fontSize:10, fontWeight:600, color:"#aaa" }}>🔒 Cerrado</div>}
       {stageLabel && <div style={{ fontSize:10, color:"#6a8caa", marginBottom:6, letterSpacing:1 }}>{stageLabel}</div>}
+      <div style={{ fontSize:10, color:"#6a8caa", marginBottom:6, textAlign:"center" }}>
+        🕐 {new Date(match.kickoff).toLocaleString("es-CR", { timeZone:"America/Costa_Rica", day:"numeric", month:"short", hour:"numeric", minute:"2-digit", hour12:true })}
+      </div>
       <div style={{ display:"flex", alignItems:"center", gap:6, marginTop: isJoker?6:0 }}>
         <div style={{ flex:1, display:"flex", alignItems:"center", gap:5, justifyContent:"flex-end" }}>
           <span style={{fontSize:12,fontWeight:600}}>{match.home}</span>
