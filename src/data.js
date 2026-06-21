@@ -39,6 +39,7 @@ export const POINT_RULES = {
   campeon: 5,
   goleador: 4,
   primerGol: 5,
+  mvp: 5,
 }
 
 // ─── PARTIDOS DE GRUPOS (hora UTC) ───────────────────────────────────────────
@@ -92,7 +93,7 @@ export const GROUP_MATCHES = [
   // Sábado 20 jun
   { id:"GM033", group:"F", home:"Países Bajos",    away:"Suecia",    kickoff:"2026-06-20T17:00:00Z", round:"GR2" },
   { id:"GM034", group:"E", home:"Alemania",        away:"Costa de Marfil",kickoff:"2026-06-20T20:00:00Z", round:"GR2" },
-  { id:"GM035", group:"E", home:"Ecuador",         away:"Curazao",        kickoff:"2026-06-21T00:00:00Z", round:"GR2" },
+  { id:"GM035", group:"E", home:"Ecuador",         away:"Curazao",        kickoff:"2026-06-20T22:00:00Z", round:"GR2" },
   { id:"GM036", group:"F", home:"Túnez",           away:"Japón",          kickoff:"2026-06-21T04:00:00Z", round:"GR2" },
   // Domingo 21 jun
   { id:"GM037", group:"H", home:"España",          away:"Arabia Saudita", kickoff:"2026-06-21T16:00:00Z", round:"GR2" },
@@ -101,7 +102,7 @@ export const GROUP_MATCHES = [
   { id:"GM040", group:"G", home:"Nueva Zelanda",   away:"Egipto",         kickoff:"2026-06-22T01:00:00Z", round:"GR2" },
   // Lunes 22 jun
   { id:"GM041", group:"J", home:"Argentina",       away:"Austria",        kickoff:"2026-06-22T17:00:00Z", round:"GR2" },
-  { id:"GM042", group:"I", home:"Francia",         away:"Iraq",    kickoff:"2026-06-22T23:00:00Z", round:"GR2" },
+  { id:"GM042", group:"I", home:"Francia",         away:"Iraq",    kickoff:"2026-06-22T21:00:00Z", round:"GR2" },
   { id:"GM043", group:"I", home:"Noruega",         away:"Senegal",        kickoff:"2026-06-23T00:00:00Z", round:"GR2" },
   { id:"GM044", group:"J", home:"Jordania",        away:"Algeria",        kickoff:"2026-06-23T03:00:00Z", round:"GR2" },
   // Martes 23 jun

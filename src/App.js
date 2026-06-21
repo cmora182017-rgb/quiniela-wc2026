@@ -33,10 +33,11 @@ function ScoreInput({ value, onChange, green, locked }) {
   )
 }
 
-function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJoker, jokerUsed, stageLabel, onSaveScorer, onViewPreds }) {
+function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJoker, jokerUsed, stageLabel, onSaveScorer, onViewPreds, onSaveMvp }) {
   const [h, setH] = useState(pred?.home_score ?? "")
   const [a, setA] = useState(pred?.away_score ?? "")
   const [scorer, setScorer] = useState(pred?.scorer ?? "")
+  const [mvp, setMvp] = useState(pred?.mvp ?? "")
   const [saving, setSaving] = useState(false)
   const locked = isLocked(match.kickoff)
 
@@ -44,7 +45,8 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
     if (pred?.home_score != null && pred?.home_score !== "") setH(pred.home_score)
     if (pred?.away_score != null && pred?.away_score !== "") setA(pred.away_score)
     if (pred?.scorer) setScorer(pred.scorer)
-  }, [pred?.home_score, pred?.away_score, pred?.scorer])
+    if (pred?.mvp) setMvp(pred.mvp)
+  }, [pred?.home_score, pred?.away_score, pred?.scorer, pred?.mvp])
 
   async function save() {
     if (locked || saving) return
@@ -136,6 +138,39 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
             <span style={{fontSize:10,fontWeight:700,color: pred.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim()?"#4cdc6a":"#e85555"}}>
               {pred.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim()
                 ? `✅+${isJoker ? POINT_RULES.primerGol * 2 : POINT_RULES.primerGol}`
+                : "❌"}
+            </span>
+          )}
+        </div>
+      )}
+      {/* MVP dropdown - solo eliminatorias */}
+      {isKnockout && !locked && onSaveMvp && (
+        <div style={{display:"flex",gap:6,marginTop:8,alignItems:"center"}}>
+          <span style={{fontSize:11,color:"#5ec8f5",whiteSpace:"nowrap"}}>⭐ MVP:</span>
+          <select
+            value={mvp} onChange={e=>{setMvp(e.target.value); onSaveMvp(e.target.value)}}
+            style={{flex:1,padding:"4px 8px",borderRadius:8,border:"1px solid rgba(94,200,245,0.3)",background:"#0d1b2a",color:"#5ec8f5",fontSize:11,outline:"none"}}>
+            <option value="">— Jugador del partido (+5pts) —</option>
+            {[...(SQUADS[match.home]||[]), ...(SQUADS[match.away]||[])].sort().map(p=>(
+              <option key={p} value={p}>{p}</option>
+            ))}
+          </select>
+          {pred?.mvp && result?.mvp && (
+            <span style={{fontSize:10,color: pred.mvp.toLowerCase().trim()===result.mvp.toLowerCase().trim()?"#4cdc6a":"#e85555",fontWeight:700}}>
+              {pred.mvp.toLowerCase().trim()===result.mvp.toLowerCase().trim()
+                ? `✅+${isJoker ? POINT_RULES.mvp * 2 : POINT_RULES.mvp}`
+                : "❌"}
+            </span>
+          )}
+        </div>
+      )}
+      {isKnockout && locked && pred?.mvp && (
+        <div style={{fontSize:11,color:"#5ec8f5",marginTop:6,display:"flex",alignItems:"center",gap:6}}>
+          ⭐ Tu MVP: <strong>{pred.mvp}</strong>
+          {result?.mvp && (
+            <span style={{fontSize:10,fontWeight:700,color: pred.mvp.toLowerCase().trim()===result.mvp.toLowerCase().trim()?"#4cdc6a":"#e85555"}}>
+              {pred.mvp.toLowerCase().trim()===result.mvp.toLowerCase().trim()
+                ? `✅+${isJoker ? POINT_RULES.mvp * 2 : POINT_RULES.mvp}`
                 : "❌"}
             </span>
           )}
@@ -309,6 +344,11 @@ export default function App() {
           const scorerPts = pred?.is_joker ? POINT_RULES.primerGol * 2 : POINT_RULES.primerGol
           pts += scorerPts
         }
+        // MVP del partido (solo eliminatorias)
+        if (pred?.mvp && res?.mvp && pred.mvp.toLowerCase().trim() === res.mvp.toLowerCase().trim()) {
+          const mvpPts = pred?.is_joker ? POINT_RULES.mvp * 2 : POINT_RULES.mvp
+          pts += mvpPts
+        }
       })
       if (userSp.champion && spR.champion && userSp.champion === spR.champion) pts += POINT_RULES.campeon
       if (userSp.top_scorer && spR.top_scorer && userSp.top_scorer.toLowerCase().trim() === spR.top_scorer.toLowerCase().trim()) pts += POINT_RULES.goleador
@@ -377,9 +417,23 @@ export default function App() {
       home_score: existing.home_score ?? null, away_score: existing.away_score ?? null,
       is_joker: existing.is_joker || false,
       scorer: scorer,
+      mvp: existing.mvp || null,
       updated_at: new Date().toISOString()
     }, { onConflict: `user_id,${idField}` })
     setStore(prev => ({ ...prev, [matchId]: { ...prev[matchId], scorer } }))
+  }
+
+  async function savePredMvp(stageId, mvp) {
+    const existing = koPredictions[stageId] || {}
+    await supabase.from('knockout_predictions').upsert({
+      user_id: session.user.id, stage_id: stageId,
+      home_score: existing.home_score ?? null, away_score: existing.away_score ?? null,
+      is_joker: existing.is_joker || false,
+      scorer: existing.scorer || null,
+      mvp: mvp,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id,stage_id' })
+    setKoPredictions(prev => ({ ...prev, [stageId]: { ...prev[stageId], mvp } }))
   }
 
   async function saveKoPrediction(stageId, scores) {
@@ -388,6 +442,7 @@ export default function App() {
       home_score: scores.home_score, away_score: scores.away_score,
       is_joker: koPredictions[stageId]?.is_joker || false,
       scorer: koPredictions[stageId]?.scorer || null,
+      mvp: koPredictions[stageId]?.mvp || null,
       updated_at: new Date().toISOString()
     }, { onConflict: 'user_id,stage_id' })
     if (!error) setKoPredictions(prev => ({ ...prev, [stageId]: { ...prev[stageId], ...scores } }))
@@ -430,6 +485,7 @@ export default function App() {
         home_score: p.home_score,
         away_score: p.away_score,
         scorer: p.scorer,
+        mvp: p.mvp,
         is_joker: p.is_joker
       })).sort((a,b) => {
         const rA = rankMap[a.name] ?? 999
@@ -493,6 +549,7 @@ export default function App() {
             <span>👟 Goleador</span><span style={{color:"#f5c842",fontWeight:700,textAlign:"right"}}>+{POINT_RULES.goleador}</span>
             <span style={{color:"#ff9500"}}>🃏 Comodín (1/jornada)</span><span style={{color:"#ff9500",fontWeight:700,textAlign:"right"}}>×2</span>
             <span style={{color:"#4cdc6a"}}>⚽ Primer gol del partido</span><span style={{color:"#4cdc6a",fontWeight:700,textAlign:"right"}}>+{POINT_RULES.primerGol}</span>
+            <span style={{color:"#5ec8f5"}}>⭐ MVP (solo eliminatorias)</span><span style={{color:"#5ec8f5",fontWeight:700,textAlign:"right"}}>+{POINT_RULES.mvp}</span>
           </div>
         </div>
       </div>
@@ -569,7 +626,9 @@ export default function App() {
                       jokerUsed={jokerStage!==null && jokerStage!==s.id}
                       onToggleJoker={()=>toggleJoker(s.id,round.id,true)}
                       onSave={scores=>saveKoPrediction(s.id,scores)}
-                      onSaveScorer={scorer=>savePredScorer(s.id,scorer,true)} />
+                      onSaveScorer={scorer=>savePredScorer(s.id,scorer,true)}
+                      onSaveMvp={mvp=>savePredMvp(s.id,mvp)}
+                      onViewPreds={isLocked(s.kickoff)?()=>loadMatchPredictions(s.id,true):null} />
                   )
                 })}
               </div>
@@ -745,14 +804,38 @@ export default function App() {
                       <span style={{fontSize:11,fontWeight:600}}>{kt.home_team}</span><span>{FLAGS[kt.home_team]||"🏳️"}</span>
                     </div>
                     <div style={{display:"flex",gap:4,alignItems:"center"}}>
-                      <ScoreInput green value={results[s.id]?.home_score??""} onChange={v=>saveResult(s.id,{home_score:v===''?null:parseInt(v),away_score:results[s.id]?.away_score??null})} />
+                      <ScoreInput green value={results[s.id]?.home_score??""} onChange={v=>saveResult(s.id,{home_score:v===''?null:parseInt(v),away_score:results[s.id]?.away_score??null,scorer:results[s.id]?.scorer??null,mvp:results[s.id]?.mvp??null})} />
                       <span style={{color:"#555",fontWeight:700}}>:</span>
-                      <ScoreInput green value={results[s.id]?.away_score??""} onChange={v=>saveResult(s.id,{home_score:results[s.id]?.home_score??null,away_score:v===''?null:parseInt(v)})} />
+                      <ScoreInput green value={results[s.id]?.away_score??""} onChange={v=>saveResult(s.id,{home_score:results[s.id]?.home_score??null,away_score:v===''?null:parseInt(v),scorer:results[s.id]?.scorer??null,mvp:results[s.id]?.mvp??null})} />
                     </div>
                     <div style={{flex:1,display:"flex",alignItems:"center",gap:5}}>
                       <span>{FLAGS[kt.away_team]||"🏳️"}</span><span style={{fontSize:11,fontWeight:600}}>{kt.away_team}</span>
                     </div>
                   </div>
+                )}
+                {kt.home_team&&kt.away_team&&(
+                  <>
+                    <div style={{display:"flex",gap:6,marginTop:8,alignItems:"center"}}>
+                      <span style={{fontSize:11,color:"#4cdc6a",whiteSpace:"nowrap"}}>⚽ 1er gol:</span>
+                      <select value={results[s.id]?.scorer||""} onChange={e=>saveResult(s.id,{home_score:results[s.id]?.home_score??null,away_score:results[s.id]?.away_score??null,scorer:e.target.value,mvp:results[s.id]?.mvp??null})}
+                        style={{flex:1,padding:"4px 8px",borderRadius:8,border:"1px solid rgba(76,220,106,0.3)",background:"#0d1b2a",color:results[s.id]?.scorer?"#4cdc6a":"#6a8caa",fontSize:11,outline:"none"}}>
+                        <option value="">— Seleccionar goleador —</option>
+                        {[...(SQUADS[kt.home_team]||[]), ...(SQUADS[kt.away_team]||[])].sort().map(p=>(
+                          <option key={p} value={p}>{p}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div style={{display:"flex",gap:6,marginTop:8,alignItems:"center"}}>
+                      <span style={{fontSize:11,color:"#5ec8f5",whiteSpace:"nowrap"}}>⭐ MVP:</span>
+                      <select value={results[s.id]?.mvp||""} onChange={e=>saveResult(s.id,{home_score:results[s.id]?.home_score??null,away_score:results[s.id]?.away_score??null,scorer:results[s.id]?.scorer??null,mvp:e.target.value})}
+                        style={{flex:1,padding:"4px 8px",borderRadius:8,border:"1px solid rgba(94,200,245,0.3)",background:"#0d1b2a",color:results[s.id]?.mvp?"#5ec8f5":"#6a8caa",fontSize:11,outline:"none"}}>
+                        <option value="">— Seleccionar MVP —</option>
+                        {[...(SQUADS[kt.home_team]||[]), ...(SQUADS[kt.away_team]||[])].sort().map(p=>(
+                          <option key={p} value={p}>{p}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </>
                 )}
               </div>
             )
@@ -821,6 +904,8 @@ export default function App() {
                 const base = calcPoints({home_score:p.home_score,away_score:p.away_score}, result, isKo)
                 const pts = p.is_joker ? base*2 : base
                 const scorerPts = p.scorer && result?.scorer && p.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim() ? (p.is_joker ? POINT_RULES.primerGol * 2 : POINT_RULES.primerGol) : 0
+                const mvpPts = isKo && p.mvp && result?.mvp && p.mvp.toLowerCase().trim()===result.mvp.toLowerCase().trim() ? (p.is_joker ? POINT_RULES.mvp * 2 : POINT_RULES.mvp) : 0
+                const totalExtra = scorerPts + mvpPts
                 const ptColor = pts > 0 ? "#4cdc6a" : "#e85555"
                 return (
                   <div key={i} style={{background:"rgba(255,255,255,0.05)",borderRadius:12,padding:"12px 14px",border:`1px solid ${p.name===session.user.email||allProfiles.find(pr=>pr.id===session.user.id)?.name===p.name?"rgba(245,200,66,0.4)":"rgba(255,255,255,0.08)"}`}}>
@@ -829,6 +914,7 @@ export default function App() {
                       <div style={{flex:1}}>
                         <div style={{fontWeight:700,fontSize:14}}>{p.name}</div>
                         {p.scorer && <div style={{fontSize:11,color:"#ff9500",marginTop:2}}>⚽ {p.scorer} {scorerPts>0?"✅":result?.scorer?"❌":""}</div>}
+                        {isKo && p.mvp && <div style={{fontSize:11,color:"#5ec8f5",marginTop:2}}>⭐ {p.mvp} {mvpPts>0?"✅":result?.mvp?"❌":""}</div>}
                         {p.is_joker && <div style={{fontSize:10,color:"#ff9500"}}>🃏 Comodín ×2</div>}
                       </div>
                       <div style={{textAlign:"center",minWidth:70}}>
@@ -838,7 +924,7 @@ export default function App() {
                       </div>
                       {result?.home_score!=null && (
                         <div style={{textAlign:"right",minWidth:40}}>
-                          <div style={{fontSize:16,fontWeight:700,color:ptColor}}>{pts>0?`+${pts+scorerPts}`:scorerPts>0?`+${scorerPts}`:"0"}</div>
+                          <div style={{fontSize:16,fontWeight:700,color:ptColor}}>{pts>0?`+${pts+totalExtra}`:totalExtra>0?`+${totalExtra}`:"0"}</div>
                           <div style={{fontSize:10,color:"#6a8caa"}}>pts</div>
                         </div>
                       )}
