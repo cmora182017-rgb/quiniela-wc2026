@@ -279,17 +279,6 @@ export default function App() {
 
   useEffect(() => { if (session) loadData() }, [session, loadData])
 
-  // Leaderboard calculation
-  useEffect(() => {
-    if (!allProfiles.length) return
-    const board = allProfiles.map(p => {
-      // Need all predictions for this user — for leaderboard we'd need to fetch all
-      // For now we show pts from current user's data; full leaderboard loaded separately
-      return { name: p.name, id: p.id, points: 0 }
-    })
-    setLeaderboard(board)
-  }, [allProfiles])
-
   // Load full leaderboard
   async function loadLeaderboard() {
     const [allPreds, allKoPreds, allSpPreds, resData, koTeamsData, spRes] = await Promise.all([
