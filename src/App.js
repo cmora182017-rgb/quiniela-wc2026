@@ -345,6 +345,10 @@ export default function App() {
       if (userSp.champion && spR.champion && userSp.champion === spR.champion) pts += POINT_RULES.campeon
       if (userSp.top_scorer && spR.top_scorer && userSp.top_scorer.toLowerCase().trim() === spR.top_scorer.toLowerCase().trim()) pts += POINT_RULES.goleador
 
+      if (prof.name === 'Carlos Lopez') {
+        console.log('DEBUG Carlos Lopez - puntos calculados:', pts)
+        console.log('DEBUG userPreds:', JSON.stringify(userPreds))
+      }
       return { name: prof.name, id: prof.id, points: pts, jokerBonus, champion: userSp.champion, topScorer: userSp.top_scorer }
     }).sort((a, b) => b.points - a.points)
 
