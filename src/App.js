@@ -280,10 +280,24 @@ export default function App() {
   useEffect(() => { if (session) loadData() }, [session, loadData])
 
   // Load full leaderboard
+  async function fetchAllRows(table) {
+    let allRows = []
+    let from = 0
+    const pageSize = 1000
+    while (true) {
+      const { data, error } = await supabase.from(table).select('*').range(from, from + pageSize - 1)
+      if (error || !data || data.length === 0) break
+      allRows = allRows.concat(data)
+      if (data.length < pageSize) break
+      from += pageSize
+    }
+    return { data: allRows }
+  }
+
   async function loadLeaderboard() {
     const [allPreds, allKoPreds, allSpPreds, resData, koTeamsData, spRes] = await Promise.all([
-      supabase.from('predictions').select('*'),
-      supabase.from('knockout_predictions').select('*'),
+      fetchAllRows('predictions'),
+      fetchAllRows('knockout_predictions'),
       supabase.from('special_predictions').select('*'),
       supabase.from('results').select('*'),
       supabase.from('knockout_teams').select('*'),
@@ -345,10 +359,6 @@ export default function App() {
       if (userSp.champion && spR.champion && userSp.champion === spR.champion) pts += POINT_RULES.campeon
       if (userSp.top_scorer && spR.top_scorer && userSp.top_scorer.toLowerCase().trim() === spR.top_scorer.toLowerCase().trim()) pts += POINT_RULES.goleador
 
-      if (prof.name === 'Carlos Lopez') {
-        console.log('DEBUG Carlos Lopez - puntos calculados:', pts)
-        console.log('DEBUG userPreds:', JSON.stringify(userPreds))
-      }
       return { name: prof.name, id: prof.id, points: pts, jokerBonus, champion: userSp.champion, topScorer: userSp.top_scorer }
     }).sort((a, b) => b.points - a.points)
 
@@ -1000,4 +1010,3 @@ function AuthScreen() {
     </div>
   )
 }
-// Cache bust: 1782152581
