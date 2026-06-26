@@ -130,7 +130,7 @@ export const GROUP_MATCHES = [
   { id:"GM061", group:"I", home:"Noruega",         away:"Francia",        kickoff:"2026-06-26T19:00:00Z", round:"GR3" },
   { id:"GM062", group:"I", home:"Senegal",         away:"Iraq",    kickoff:"2026-06-26T19:00:00Z", round:"GR3" },
   { id:"GM063", group:"H", home:"Cabo Verde",      away:"Arabia Saudita", kickoff:"2026-06-27T00:00:00Z", round:"GR3" },
-  { id:"GM064", group:"H", home:"Uruguay",         away:"España",         kickoff:"2026-06-26T22:00:00Z", round:"GR3" },
+  { id:"GM064", group:"H", home:"Uruguay",         away:"España",         kickoff:"2026-06-27T00:00:00Z", round:"GR3" },
   { id:"GM065", group:"G", home:"Egipto",          away:"Irán",           kickoff:"2026-06-27T00:00:00Z", round:"GR3" },
   { id:"GM066", group:"G", home:"Nueva Zelanda",   away:"Bélgica",        kickoff:"2026-06-27T03:00:00Z", round:"GR3" },
   // Sábado 27 jun
