@@ -899,8 +899,8 @@ export default function App() {
                       KNOCKOUT_STAGES.find(s=>s.id===comparingMatch)
     const isKo = !!KNOCKOUT_STAGES.find(s=>s.id===comparingMatch)
     const koId = comparingMatch?.replace('ko_','')
-    const homeTeam = isKo ? knockoutTeams[koId]?.home_team : matchInfo?.home
-    const awayTeam = isKo ? knockoutTeams[koId]?.away_team : matchInfo?.away
+    const homeTeam = isKo ? koTeams[koId]?.home_team : matchInfo?.home
+    const awayTeam = isKo ? koTeams[koId]?.away_team : matchInfo?.away
     const result = results[comparingMatch]
 
     return (
