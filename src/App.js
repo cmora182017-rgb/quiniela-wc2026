@@ -111,6 +111,7 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
             const matchPts = isJoker ? base * 2 : base
             return matchPts > 0 ? <span style={{marginLeft:8,color:"#4cdc6a",fontWeight:700}}>✅+{matchPts}</span> : <span style={{marginLeft:8,color:"#e85555"}}>❌</span>
           })()}
+          {isKnockout && result.mvp && <div style={{marginTop:3,color:"#5ec8f5"}}>⭐ MVP real: {result.mvp}</div>}
         </div>
       )}
       {/* Scorer dropdown */}
