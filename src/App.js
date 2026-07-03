@@ -709,17 +709,22 @@ export default function App() {
           }}>
             {isFirst && (
               <div style={{position:"absolute",top:-10,right:14,background:"#f5c842",color:"#1a1100",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
-                🎁 LA SORPRESA DEL TORNEO
+                ⚔️ GLADIADOR DE TEMU
               </div>
             )}
             {isSecond && (
               <div style={{position:"absolute",top:-10,right:14,background:"#c0c0c0",color:"#1a1a1a",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
-                🎆 FUEGO ARTIFICIAL
+                📉 CAÍDA DE LA DICTADURA
               </div>
             )}
             {isThird && (
               <div style={{position:"absolute",top:-10,right:14,background:"#cd7f32",color:"#fff",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
-                📉 LA GRAN CAÍDA
+                🕯️ ROSA DE GUADALUPE
+              </div>
+            )}
+            {i===3 && (
+              <div style={{position:"absolute",top:-10,right:14,background:"#8a8aff",color:"#fff",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
+                👻 ¿DE DÓNDE SALIÓ ESTE MAE?
               </div>
             )}
             {isLast && (
@@ -735,9 +740,10 @@ export default function App() {
                 {p.topScorer&&<span style={{marginLeft:8}}>👟 {p.topScorer}</span>}
                 {p.jokerBonus>0&&<span style={{marginLeft:8,color:"#ff9500"}}>🃏 +{p.jokerBonus}</span>}
               </div>
-              {isFirst && <div style={{fontSize:10,color:"#f5c842",marginTop:3,fontStyle:"italic"}}>Ni pinta tiene de ver fútbol y ahí va, liderando 🎁</div>}
-              {isSecond && <div style={{fontSize:10,color:"#c0c0c0",marginTop:3,fontStyle:"italic"}}>Brilló un segundo y se apagó 🎆</div>}
-              {isThird && <div style={{fontSize:10,color:"#cd7f32",marginTop:3,fontStyle:"italic"}}>Semanas en 1er lugar y la pechó monumental 📉</div>}
+              {isFirst && <div style={{fontSize:10,color:"#f5c842",marginTop:3,fontStyle:"italic"}}>Versión económica, pero sigue en la cima ⚔️</div>}
+              {isSecond && <div style={{fontSize:10,color:"#c0c0c0",marginTop:3,fontStyle:"italic"}}>El poder no dura para siempre 📉</div>}
+              {isThird && <div style={{fontSize:10,color:"#cd7f32",marginTop:3,fontStyle:"italic"}}>En cualquier momento se le da el milagro 🕯️</div>}
+              {i===3 && <div style={{fontSize:10,color:"#8a8aff",marginTop:3,fontStyle:"italic"}}>¿De dónde salió este mae? 👻</div>}
               {isLast && <div style={{fontSize:10,color:"#e85555",marginTop:3,fontStyle:"italic"}}>Destruyó todo a su paso, incluyendo sus propios puntos 🌪️</div>}
             </div>
             <div style={{textAlign:"right"}}>
