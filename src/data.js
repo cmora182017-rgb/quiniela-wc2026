@@ -163,8 +163,8 @@ export const KNOCKOUT_STAGES = [
   { id:"R32_15", label:"R32 - 15",      round:"KO_R32", kickoff:"2026-07-03T22:00:00Z" },
   { id:"R32_16", label:"R32 - 16",      round:"KO_R32", kickoff:"2026-07-04T01:30:00Z" },
   // Octavos de Final (Ronda de 16)
-  { id:"R16_1",  label:"Octavos 1",     round:"KO_R16", kickoff:"2026-07-04T19:00:00Z" },
-  { id:"R16_2",  label:"Octavos 2",     round:"KO_R16", kickoff:"2026-07-05T01:00:00Z" },
+  { id:"R16_1",  label:"Octavos 1",     round:"KO_R16", kickoff:"2026-07-04T17:00:00Z" },
+  { id:"R16_2",  label:"Octavos 2",     round:"KO_R16", kickoff:"2026-07-04T21:00:00Z" },
   { id:"R16_3",  label:"Octavos 3",     round:"KO_R16", kickoff:"2026-07-05T20:00:00Z" },
   { id:"R16_4",  label:"Octavos 4",     round:"KO_R16", kickoff:"2026-07-06T00:00:00Z" },
   { id:"R16_5",  label:"Octavos 5",     round:"KO_R16", kickoff:"2026-07-06T21:00:00Z" },
