@@ -33,11 +33,13 @@ function ScoreInput({ value, onChange, green, locked }) {
   )
 }
 
-function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJoker, jokerUsed, stageLabel, onSaveScorer, onViewPreds, onSaveMvp }) {
+function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJoker, jokerUsed, stageLabel, onSaveScorer, onViewPreds, onSaveMvp, onSaveHalftime }) {
   const [h, setH] = useState(pred?.home_score ?? "")
   const [a, setA] = useState(pred?.away_score ?? "")
   const [scorer, setScorer] = useState(pred?.scorer ?? "")
   const [mvp, setMvp] = useState(pred?.mvp ?? "")
+  const [htHome, setHtHome] = useState(pred?.halftime_home ?? "")
+  const [htAway, setHtAway] = useState(pred?.halftime_away ?? "")
   const [saving, setSaving] = useState(false)
   const locked = isLocked(match.kickoff)
 
@@ -46,7 +48,9 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
     if (pred?.away_score != null && pred?.away_score !== "") setA(pred.away_score)
     if (pred?.scorer) setScorer(pred.scorer)
     if (pred?.mvp) setMvp(pred.mvp)
-  }, [pred?.home_score, pred?.away_score, pred?.scorer, pred?.mvp])
+    if (pred?.halftime_home != null) setHtHome(pred.halftime_home)
+    if (pred?.halftime_away != null) setHtAway(pred.halftime_away)
+  }, [pred?.home_score, pred?.away_score, pred?.scorer, pred?.mvp, pred?.halftime_home, pred?.halftime_away])
 
   async function save() {
     if (locked || saving) return
@@ -112,6 +116,7 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
             return matchPts > 0 ? <span style={{marginLeft:8,color:"#4cdc6a",fontWeight:700}}>✅+{matchPts}</span> : <span style={{marginLeft:8,color:"#e85555"}}>❌</span>
           })()}
           {isKnockout && result.mvp && <div style={{marginTop:3,color:"#5ec8f5"}}>⭐ MVP real: {result.mvp}</div>}
+          {isKnockout && result.halftime_home != null && <div style={{marginTop:3,color:"#c07fff"}}>🕐 Descanso real: {result.halftime_home} – {result.halftime_away}</div>}
         </div>
       )}
       {/* Scorer dropdown */}
@@ -175,6 +180,33 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
             <span style={{fontSize:10,fontWeight:700,color: pred.mvp.toLowerCase().trim()===result.mvp.toLowerCase().trim()?"#4cdc6a":"#e85555"}}>
               {pred.mvp.toLowerCase().trim()===result.mvp.toLowerCase().trim()
                 ? `✅+${isJoker ? POINT_RULES.mvp * 2 : POINT_RULES.mvp}`
+                : "❌"}
+            </span>
+          )}
+        </div>
+      )}
+      {/* Marcador al descanso - solo Cuartos en adelante (rounds QF, SF, F) */}
+      {isKnockout && match.id && (match.id.startsWith('QF') || match.id.startsWith('SF') || match.id.startsWith('F_')) && !locked && onSaveMvp && (
+        <div style={{background:"rgba(180,100,255,0.08)",border:"1px solid rgba(180,100,255,0.3)",borderRadius:8,padding:"8px 10px",marginTop:8}}>
+          <div style={{fontSize:10,color:"#c07fff",fontWeight:700,marginBottom:6}}>🕐 Marcador al descanso <span style={{background:"#c07fff",color:"#1a0033",fontSize:9,padding:"1px 6px",borderRadius:20,marginLeft:4}}>+3 pts</span></div>
+          <div style={{display:"flex",gap:6,alignItems:"center"}}>
+            <span style={{fontSize:11,color:"#c07fff"}}>{match.home}</span>
+            <input type="number" min="0" max="20" value={htHome} onChange={e=>{setHtHome(e.target.value); onSaveHalftime && onSaveHalftime(e.target.value, htAway)}}
+              style={{width:32,textAlign:"center",padding:"3px 0",fontSize:13,fontWeight:700,borderRadius:6,border:"1px solid rgba(180,100,255,0.4)",background:"rgba(180,100,255,0.1)",color:"#c07fff"}} />
+            <span style={{color:"#555",fontWeight:700}}>:</span>
+            <input type="number" min="0" max="20" value={htAway} onChange={e=>{setHtAway(e.target.value); onSaveHalftime && onSaveHalftime(htHome, e.target.value)}}
+              style={{width:32,textAlign:"center",padding:"3px 0",fontSize:13,fontWeight:700,borderRadius:6,border:"1px solid rgba(180,100,255,0.4)",background:"rgba(180,100,255,0.1)",color:"#c07fff"}} />
+            <span style={{fontSize:11,color:"#c07fff"}}>{match.away}</span>
+          </div>
+        </div>
+      )}
+      {isKnockout && match.id && (match.id.startsWith('QF') || match.id.startsWith('SF') || match.id.startsWith('F_')) && locked && pred?.halftime_home != null && (
+        <div style={{fontSize:11,color:"#c07fff",marginTop:6,display:"flex",alignItems:"center",gap:6}}>
+          🕐 Tu descanso: <strong>{pred.halftime_home} – {pred.halftime_away}</strong>
+          {result?.halftime_home != null && (
+            <span style={{fontSize:10,fontWeight:700,color: pred.halftime_home===result.halftime_home && pred.halftime_away===result.halftime_away?"#4cdc6a":"#e85555"}}>
+              {pred.halftime_home===result.halftime_home && pred.halftime_away===result.halftime_away
+                ? `✅+${isJoker ? POINT_RULES.halftime * 2 : POINT_RULES.halftime}`
                 : "❌"}
             </span>
           )}
@@ -356,6 +388,15 @@ export default function App() {
           const mvpPts = pred?.is_joker ? POINT_RULES.mvp * 2 : POINT_RULES.mvp
           pts += mvpPts
         }
+        // Marcador al descanso (solo QF en adelante)
+        if (s.id.startsWith('QF') || s.id.startsWith('SF') || s.id.startsWith('F_')) {
+          if (pred?.halftime_home != null && pred?.halftime_away != null &&
+              res?.halftime_home != null && res?.halftime_away != null &&
+              pred.halftime_home === res.halftime_home && pred.halftime_away === res.halftime_away) {
+            const htPts = pred?.is_joker ? POINT_RULES.halftime * 2 : POINT_RULES.halftime
+            pts += htPts
+          }
+        }
       })
       if (userSp.champion && spR.champion && userSp.champion === spR.champion) pts += POINT_RULES.campeon
       if (userSp.top_scorer && spR.top_scorer && userSp.top_scorer.toLowerCase().trim() === spR.top_scorer.toLowerCase().trim()) pts += POINT_RULES.goleador
@@ -430,6 +471,22 @@ export default function App() {
     setStore(prev => ({ ...prev, [matchId]: { ...prev[matchId], scorer } }))
   }
 
+  async function saveKoHalftime(stageId, htHome, htAway) {
+    const existing = koPredictions[stageId] || {}
+    const hh = htHome === "" ? null : parseInt(htHome)
+    const ha = htAway === "" ? null : parseInt(htAway)
+    await supabase.from('knockout_predictions').upsert({
+      user_id: session.user.id, stage_id: stageId,
+      home_score: existing.home_score ?? null, away_score: existing.away_score ?? null,
+      is_joker: existing.is_joker || false,
+      scorer: existing.scorer || null,
+      mvp: existing.mvp || null,
+      halftime_home: hh, halftime_away: ha,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id,stage_id' })
+    setKoPredictions(prev => ({ ...prev, [stageId]: { ...prev[stageId], halftime_home: hh, halftime_away: ha } }))
+  }
+
   async function savePredMvp(stageId, mvp) {
     const existing = koPredictions[stageId] || {}
     await supabase.from('knockout_predictions').upsert({
@@ -493,6 +550,8 @@ export default function App() {
         away_score: p.away_score,
         scorer: p.scorer,
         mvp: p.mvp,
+        halftime_home: p.halftime_home,
+        halftime_away: p.halftime_away,
         is_joker: p.is_joker
       })).sort((a,b) => {
         const rA = rankMap[a.name] ?? 999
@@ -557,6 +616,7 @@ export default function App() {
             <span style={{color:"#ff9500"}}>🃏 Comodín (1/jornada)</span><span style={{color:"#ff9500",fontWeight:700,textAlign:"right"}}>×2</span>
             <span style={{color:"#4cdc6a"}}>⚽ Primer gol del partido</span><span style={{color:"#4cdc6a",fontWeight:700,textAlign:"right"}}>+{POINT_RULES.primerGol}</span>
             <span style={{color:"#5ec8f5"}}>⭐ MVP (solo eliminatorias)</span><span style={{color:"#5ec8f5",fontWeight:700,textAlign:"right"}}>+{POINT_RULES.mvp}</span>
+            <span style={{color:"#c07fff"}}>🕐 Descanso exacto (QF en adelante)</span><span style={{color:"#c07fff",fontWeight:700,textAlign:"right"}}>+{POINT_RULES.halftime}</span>
           </div>
         </div>
       </div>
@@ -635,6 +695,7 @@ export default function App() {
                       onSave={scores=>saveKoPrediction(s.id,scores)}
                       onSaveScorer={scorer=>savePredScorer(s.id,scorer,true)}
                       onSaveMvp={mvp=>savePredMvp(s.id,mvp)}
+                      onSaveHalftime={(h,a)=>saveKoHalftime(s.id,h,a)}
                       onViewPreds={isLocked(s.kickoff)?()=>loadMatchPredictions(s.id,true):null} />
                   )
                 })}
@@ -854,7 +915,7 @@ export default function App() {
                     </div>
                     <div style={{display:"flex",gap:6,marginTop:8,alignItems:"center"}}>
                       <span style={{fontSize:11,color:"#5ec8f5",whiteSpace:"nowrap"}}>⭐ MVP:</span>
-                      <select value={results[s.id]?.mvp||""} onChange={e=>saveResult(s.id,{home_score:results[s.id]?.home_score??null,away_score:results[s.id]?.away_score??null,scorer:results[s.id]?.scorer??null,mvp:e.target.value})}
+                      <select value={results[s.id]?.mvp||""} onChange={e=>saveResult(s.id,{home_score:results[s.id]?.home_score??null,away_score:results[s.id]?.away_score??null,scorer:results[s.id]?.scorer??null,mvp:e.target.value,halftime_home:results[s.id]?.halftime_home??null,halftime_away:results[s.id]?.halftime_away??null})}
                         style={{flex:1,padding:"4px 8px",borderRadius:8,border:"1px solid rgba(94,200,245,0.3)",background:"#0d1b2a",color:results[s.id]?.mvp?"#5ec8f5":"#6a8caa",fontSize:11,outline:"none"}}>
                         <option value="">— Seleccionar MVP —</option>
                         {[...(SQUADS[kt.home_team]||[]), ...(SQUADS[kt.away_team]||[])].sort().map(p=>(
@@ -862,6 +923,18 @@ export default function App() {
                         ))}
                       </select>
                     </div>
+                    {(s.id.startsWith('QF') || s.id.startsWith('SF') || s.id.startsWith('F_')) && kt.home_team && kt.away_team && (
+                      <div style={{display:"flex",gap:6,marginTop:8,alignItems:"center"}}>
+                        <span style={{fontSize:11,color:"#c07fff",whiteSpace:"nowrap"}}>🕐 Descanso:</span>
+                        <span style={{fontSize:11,color:"#c07fff"}}>{kt.home_team}</span>
+                        <input type="number" min="0" max="20" value={results[s.id]?.halftime_home??""} onChange={v=>saveResult(s.id,{home_score:results[s.id]?.home_score??null,away_score:results[s.id]?.away_score??null,scorer:results[s.id]?.scorer??null,mvp:results[s.id]?.mvp??null,halftime_home:v===''?null:parseInt(v),halftime_away:results[s.id]?.halftime_away??null})}
+                          style={{width:32,textAlign:"center",padding:"3px 0",fontSize:13,fontWeight:700,borderRadius:6,border:"1px solid rgba(180,100,255,0.4)",background:"rgba(180,100,255,0.1)",color:"#c07fff"}} />
+                        <span style={{color:"#555",fontWeight:700}}>:</span>
+                        <input type="number" min="0" max="20" value={results[s.id]?.halftime_away??""} onChange={v=>saveResult(s.id,{home_score:results[s.id]?.home_score??null,away_score:results[s.id]?.away_score??null,scorer:results[s.id]?.scorer??null,mvp:results[s.id]?.mvp??null,halftime_home:results[s.id]?.halftime_home??null,halftime_away:v===''?null:parseInt(v)})}
+                          style={{width:32,textAlign:"center",padding:"3px 0",fontSize:13,fontWeight:700,borderRadius:6,border:"1px solid rgba(180,100,255,0.4)",background:"rgba(180,100,255,0.1)",color:"#c07fff"}} />
+                        <span style={{fontSize:11,color:"#c07fff"}}>{kt.away_team}</span>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -932,7 +1005,9 @@ export default function App() {
                 const pts = p.is_joker ? base*2 : base
                 const scorerPts = p.scorer && result?.scorer && p.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim() ? (p.is_joker ? POINT_RULES.primerGol * 2 : POINT_RULES.primerGol) : 0
                 const mvpPts = isKo && p.mvp && result?.mvp && p.mvp.toLowerCase().trim()===result.mvp.toLowerCase().trim() ? (p.is_joker ? POINT_RULES.mvp * 2 : POINT_RULES.mvp) : 0
-                const totalExtra = scorerPts + mvpPts
+                const isQFplus = isKo && comparingMatch && (comparingMatch.startsWith('QF') || comparingMatch.startsWith('SF') || comparingMatch.startsWith('F_'))
+                const htPts = isQFplus && p.halftime_home != null && p.halftime_away != null && result?.halftime_home != null && p.halftime_home===result.halftime_home && p.halftime_away===result.halftime_away ? (p.is_joker ? POINT_RULES.halftime * 2 : POINT_RULES.halftime) : 0
+                const totalExtra = scorerPts + mvpPts + htPts
                 const ptColor = pts > 0 ? "#4cdc6a" : "#e85555"
                 return (
                   <div key={i} style={{background:"rgba(255,255,255,0.05)",borderRadius:12,padding:"12px 14px",border:`1px solid ${p.name===session.user.email||allProfiles.find(pr=>pr.id===session.user.id)?.name===p.name?"rgba(245,200,66,0.4)":"rgba(255,255,255,0.08)"}`}}>
@@ -942,6 +1017,7 @@ export default function App() {
                         <div style={{fontWeight:700,fontSize:14}}>{p.name}</div>
                         {p.scorer && <div style={{fontSize:11,color:"#ff9500",marginTop:2}}>⚽ {p.scorer} {scorerPts>0?"✅":result?.scorer?"❌":""}</div>}
                         {isKo && p.mvp && <div style={{fontSize:11,color:"#5ec8f5",marginTop:2}}>⭐ {p.mvp} {mvpPts>0?"✅":result?.mvp?"❌":""}</div>}
+                        {isQFplus && p.halftime_home != null && <div style={{fontSize:11,color:"#c07fff",marginTop:2}}>🕐 {p.halftime_home}–{p.halftime_away} {htPts>0?"✅":result?.halftime_home!=null?"❌":""}</div>}
                         {p.is_joker && <div style={{fontSize:10,color:"#ff9500"}}>🃏 Comodín ×2</div>}
                       </div>
                       <div style={{textAlign:"center",minWidth:70}}>
