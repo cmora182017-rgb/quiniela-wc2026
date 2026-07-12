@@ -770,22 +770,27 @@ export default function App() {
           }}>
             {isFirst && (
               <div style={{position:"absolute",top:-10,right:14,background:"#f5c842",color:"#1a1100",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
-                ⚔️ GLADIADOR DE TEMU
+                🔄 EL BOOMERANG
               </div>
             )}
             {isSecond && (
               <div style={{position:"absolute",top:-10,right:14,background:"#c0c0c0",color:"#1a1a1a",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
-                📉 CAÍDA DE LA DICTADURA
+                🧊 EL ICEBERG
               </div>
             )}
             {isThird && (
               <div style={{position:"absolute",top:-10,right:14,background:"#cd7f32",color:"#fff",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
-                🕯️ ROSA DE GUADALUPE
+                👺 EL QUE NADIE VIO VENIR
               </div>
             )}
             {i===3 && (
               <div style={{position:"absolute",top:-10,right:14,background:"#8a8aff",color:"#fff",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
                 👻 ¿DE DÓNDE SALIÓ ESTE MAE?
+              </div>
+            )}
+            {i===4 && (
+              <div style={{position:"absolute",top:-10,right:14,background:"#2e86ab",color:"#fff",fontSize:10,fontWeight:700,padding:"2px 10px",borderRadius:20,letterSpacing:1}}>
+                ⚓ CAPITÁN DEL BARCO
               </div>
             )}
             {isLast && (
@@ -801,10 +806,11 @@ export default function App() {
                 {p.topScorer&&<span style={{marginLeft:8}}>👟 {p.topScorer}</span>}
                 {p.jokerBonus>0&&<span style={{marginLeft:8,color:"#ff9500"}}>🃏 +{p.jokerBonus}</span>}
               </div>
-              {isFirst && <div style={{fontSize:10,color:"#f5c842",marginTop:3,fontStyle:"italic"}}>Versión económica, pero sigue en la cima ⚔️</div>}
-              {isSecond && <div style={{fontSize:10,color:"#c0c0c0",marginTop:3,fontStyle:"italic"}}>El poder no dura para siempre 📉</div>}
-              {isThird && <div style={{fontSize:10,color:"#cd7f32",marginTop:3,fontStyle:"italic"}}>En cualquier momento se le da el milagro 🕯️</div>}
+              {isFirst && <div style={{fontSize:10,color:"#f5c842",marginTop:3,fontStyle:"italic"}}>Tiralo que vuelve solo al primer lugar 🔄</div>}
+              {isSecond && <div style={{fontSize:10,color:"#c0c0c0",marginTop:3,fontStyle:"italic"}}>Por fuera frío, por dentro... también frío 🧊</div>}
+              {isThird && <div style={{fontSize:10,color:"#cd7f32",marginTop:3,fontStyle:"italic"}}>Apareció de la nada y asusta 👺</div>}
               {i===3 && <div style={{fontSize:10,color:"#8a8aff",marginTop:3,fontStyle:"italic"}}>¿De dónde salió este mae? 👻</div>}
+              {i===4 && <div style={{fontSize:10,color:"#2e86ab",marginTop:3,fontStyle:"italic"}}>Dirige la quiniela pero no la gana ⚓</div>}
               {isLast && <div style={{fontSize:10,color:"#e85555",marginTop:3,fontStyle:"italic"}}>Destruyó todo a su paso, incluyendo sus propios puntos 🌪️</div>}
             </div>
             <div style={{textAlign:"right"}}>
