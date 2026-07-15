@@ -182,7 +182,7 @@ export const KNOCKOUT_STAGES = [
   { id:"SF_1",   label:"Semifinal 1",   round:"KO_SF",  kickoff:"2026-07-14T19:00:00Z" },
   { id:"SF_2",   label:"Semifinal 2",   round:"KO_SF",  kickoff:"2026-07-15T19:00:00Z" },
   // Tercer lugar y Final
-  { id:"3RD",    label:"Tercer Lugar",  round:"KO_F",   kickoff:"2026-07-18T23:00:00Z" },
+  { id:"3RD",    label:"Tercer Lugar",  round:"KO_F",   kickoff:"2026-07-18T21:00:00Z" },
   { id:"FINAL",  label:"⭐ Final",       round:"KO_F",   kickoff:"2026-07-19T19:00:00Z" },
 ]
 
