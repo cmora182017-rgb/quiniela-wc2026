@@ -189,7 +189,7 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
         </div>
       )}
       {/* Marcador al descanso - solo Cuartos en adelante (rounds QF, SF, F) */}
-      {isKnockout && match.id && (match.id.startsWith('QF') || match.id.startsWith('SF') || match.id.startsWith('F_')) && !locked && onSaveMvp && (
+      {isKnockout && match.id && (match.id.startsWith('QF') || match.id.startsWith('SF') || match.id === 'FINAL') && !locked && onSaveMvp && (
         <div style={{background:"rgba(180,100,255,0.08)",border:"1px solid rgba(180,100,255,0.3)",borderRadius:8,padding:"8px 10px",marginTop:8}}>
           <div style={{fontSize:10,color:"#c07fff",fontWeight:700,marginBottom:6}}>🕐 Marcador al descanso <span style={{background:"#c07fff",color:"#1a0033",fontSize:9,padding:"1px 6px",borderRadius:20,marginLeft:4}}>+3 pts</span></div>
           <div style={{display:"flex",gap:6,alignItems:"center"}}>
@@ -203,7 +203,7 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
           </div>
         </div>
       )}
-      {isKnockout && match.id && (match.id.startsWith('QF') || match.id.startsWith('SF') || match.id.startsWith('F_')) && locked && pred?.halftime_home != null && (
+      {isKnockout && match.id && (match.id.startsWith('QF') || match.id.startsWith('SF') || match.id === 'FINAL') && locked && pred?.halftime_home != null && (
         <div style={{fontSize:11,color:"#c07fff",marginTop:6,display:"flex",alignItems:"center",gap:6}}>
           🕐 Tu descanso: <strong>{pred.halftime_home} – {pred.halftime_away}</strong>
           {result?.halftime_home != null && (
@@ -216,7 +216,7 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
         </div>
       )}
       {/* Anotador último gol - solo para la Final */}
-      {isKnockout && match.id && match.id.startsWith('F_') && !locked && onSaveLastScorer && (
+      {isKnockout && match.id && match.id === 'FINAL' && !locked && onSaveLastScorer && (
         <div style={{background:"linear-gradient(135deg,rgba(255,215,0,0.08),rgba(255,150,0,0.06))",border:"1.5px solid rgba(255,215,0,0.4)",borderRadius:10,padding:"10px 12px",marginTop:10}}>
           <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
             <span style={{fontSize:11,color:"#ffd700",fontWeight:700}}>🥅 Anotador del último gol de la Final</span>
@@ -232,7 +232,7 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
           <div style={{fontSize:9,color:"#6a8caa",marginTop:6}}>⚠️ Si hay penales, el último gol es el penal decisivo</div>
         </div>
       )}
-      {isKnockout && match.id && match.id.startsWith('F_') && locked && pred?.last_scorer && (
+      {isKnockout && match.id && match.id === 'FINAL' && locked && pred?.last_scorer && (
         <div style={{fontSize:11,color:"#ffd700",marginTop:6,display:"flex",alignItems:"center",gap:6}}>
           🥅 Tu último gol: <strong>{pred.last_scorer}</strong>
           {result?.last_scorer && (
@@ -421,7 +421,7 @@ export default function App() {
           pts += mvpPts
         }
         // Marcador al descanso (solo QF en adelante)
-        if (s.id.startsWith('QF') || s.id.startsWith('SF') || s.id.startsWith('F_')) {
+        if (s.id.startsWith('QF') || s.id.startsWith('SF') || s.id === 'FINAL') {
           if (pred?.halftime_home != null && pred?.halftime_away != null &&
               res?.halftime_home != null && res?.halftime_away != null &&
               pred.halftime_home === res.halftime_home && pred.halftime_away === res.halftime_away) {
@@ -430,7 +430,7 @@ export default function App() {
           }
         }
         // Anotador último gol (solo Final)
-        if (s.id.startsWith('F_')) {
+        if (s.id === 'FINAL') {
           if (pred?.last_scorer && res?.last_scorer &&
               pred.last_scorer.toLowerCase().trim() === res.last_scorer.toLowerCase().trim()) {
             const lsPts = pred?.is_joker ? POINT_RULES.lastScorer * 2 : POINT_RULES.lastScorer
@@ -987,7 +987,7 @@ export default function App() {
                         ))}
                       </select>
                     </div>
-                    {s.id.startsWith('F_') && kt.home_team && kt.away_team && (
+                    {s.id === 'FINAL' && kt.home_team && kt.away_team && (
                       <div style={{display:"flex",gap:6,marginTop:8,alignItems:"center"}}>
                         <span style={{fontSize:11,color:"#ffd700",whiteSpace:"nowrap"}}>🥅 Último gol:</span>
                         <select value={results[s.id]?.last_scorer||""} onChange={e=>saveResult(s.id,{...results[s.id],last_scorer:e.target.value})}
@@ -999,7 +999,7 @@ export default function App() {
                         </select>
                       </div>
                     )}
-                    {(s.id.startsWith('QF') || s.id.startsWith('SF') || s.id.startsWith('F_')) && kt.home_team && kt.away_team && (
+                    {(s.id.startsWith('QF') || s.id.startsWith('SF') || s.id === 'FINAL') && kt.home_team && kt.away_team && (
                       <div style={{display:"flex",gap:6,marginTop:8,alignItems:"center"}}>
                         <span style={{fontSize:11,color:"#c07fff",whiteSpace:"nowrap"}}>🕐 Descanso:</span>
                         <span style={{fontSize:11,color:"#c07fff"}}>{kt.home_team}</span>
@@ -1081,9 +1081,9 @@ export default function App() {
                 const pts = p.is_joker ? base*2 : base
                 const scorerPts = p.scorer && result?.scorer && p.scorer.toLowerCase().trim()===result.scorer.toLowerCase().trim() ? (p.is_joker ? POINT_RULES.primerGol * 2 : POINT_RULES.primerGol) : 0
                 const mvpPts = isKo && p.mvp && result?.mvp && p.mvp.toLowerCase().trim()===result.mvp.toLowerCase().trim() ? (p.is_joker ? POINT_RULES.mvp * 2 : POINT_RULES.mvp) : 0
-                const isQFplus = isKo && comparingMatch && (comparingMatch.startsWith('QF') || comparingMatch.startsWith('SF') || comparingMatch.startsWith('F_'))
+                const isQFplus = isKo && comparingMatch && (comparingMatch.startsWith('QF') || comparingMatch.startsWith('SF') || comparingMatch === 'FINAL')
                 const htPts = isQFplus && p.halftime_home != null && p.halftime_away != null && result?.halftime_home != null && p.halftime_home===result.halftime_home && p.halftime_away===result.halftime_away ? (p.is_joker ? POINT_RULES.halftime * 2 : POINT_RULES.halftime) : 0
-                const isFinal = isKo && comparingMatch && comparingMatch.startsWith('F_')
+                const isFinal = isKo && comparingMatch && comparingMatch === 'FINAL'
                 const lsPts = isFinal && p.last_scorer && result?.last_scorer && p.last_scorer.toLowerCase().trim()===result.last_scorer.toLowerCase().trim() ? (p.is_joker ? POINT_RULES.lastScorer * 2 : POINT_RULES.lastScorer) : 0
                 const totalExtra = scorerPts + mvpPts + htPts + lsPts
                 const ptColor = pts > 0 ? "#4cdc6a" : "#e85555"
