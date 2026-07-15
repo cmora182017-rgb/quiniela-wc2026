@@ -41,6 +41,7 @@ export const POINT_RULES = {
   primerGol: 5,
   mvp: 5,
   halftime: 3,
+  lastScorer: 10,
 }
 
 // ─── PARTIDOS DE GRUPOS (hora UTC) ───────────────────────────────────────────

@@ -33,13 +33,14 @@ function ScoreInput({ value, onChange, green, locked }) {
   )
 }
 
-function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJoker, jokerUsed, stageLabel, onSaveScorer, onViewPreds, onSaveMvp, onSaveHalftime }) {
+function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJoker, jokerUsed, stageLabel, onSaveScorer, onViewPreds, onSaveMvp, onSaveHalftime, onSaveLastScorer }) {
   const [h, setH] = useState(pred?.home_score ?? "")
   const [a, setA] = useState(pred?.away_score ?? "")
   const [scorer, setScorer] = useState(pred?.scorer ?? "")
   const [mvp, setMvp] = useState(pred?.mvp ?? "")
   const [htHome, setHtHome] = useState(pred?.halftime_home ?? "")
   const [htAway, setHtAway] = useState(pred?.halftime_away ?? "")
+  const [lastScorer, setLastScorer] = useState(pred?.last_scorer ?? "")
   const [saving, setSaving] = useState(false)
   const locked = isLocked(match.kickoff)
 
@@ -50,7 +51,8 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
     if (pred?.mvp) setMvp(pred.mvp)
     if (pred?.halftime_home != null) setHtHome(pred.halftime_home)
     if (pred?.halftime_away != null) setHtAway(pred.halftime_away)
-  }, [pred?.home_score, pred?.away_score, pred?.scorer, pred?.mvp, pred?.halftime_home, pred?.halftime_away])
+    if (pred?.last_scorer) setLastScorer(pred.last_scorer)
+  }, [pred?.home_score, pred?.away_score, pred?.scorer, pred?.mvp, pred?.halftime_home, pred?.halftime_away, pred?.last_scorer])
 
   async function save() {
     if (locked || saving) return
@@ -117,6 +119,7 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
           })()}
           {isKnockout && result.mvp && <div style={{marginTop:3,color:"#5ec8f5"}}>⭐ MVP real: {result.mvp}</div>}
           {isKnockout && result.halftime_home != null && <div style={{marginTop:3,color:"#c07fff"}}>🕐 Descanso real: {result.halftime_home} – {result.halftime_away}</div>}
+          {isKnockout && result.last_scorer && <div style={{marginTop:3,color:"#ffd700"}}>🥅 Último gol real: {result.last_scorer}</div>}
         </div>
       )}
       {/* Scorer dropdown */}
@@ -207,6 +210,35 @@ function MatchCard({ match, pred, onSave, result, isKnockout, isJoker, onToggleJ
             <span style={{fontSize:10,fontWeight:700,color: pred.halftime_home===result.halftime_home && pred.halftime_away===result.halftime_away?"#4cdc6a":"#e85555"}}>
               {pred.halftime_home===result.halftime_home && pred.halftime_away===result.halftime_away
                 ? `✅+${isJoker ? POINT_RULES.halftime * 2 : POINT_RULES.halftime}`
+                : "❌"}
+            </span>
+          )}
+        </div>
+      )}
+      {/* Anotador último gol - solo para la Final */}
+      {isKnockout && match.id && match.id.startsWith('F_') && !locked && onSaveLastScorer && (
+        <div style={{background:"linear-gradient(135deg,rgba(255,215,0,0.08),rgba(255,150,0,0.06))",border:"1.5px solid rgba(255,215,0,0.4)",borderRadius:10,padding:"10px 12px",marginTop:10}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+            <span style={{fontSize:11,color:"#ffd700",fontWeight:700}}>🥅 Anotador del último gol de la Final</span>
+            <span style={{background:"#ffd700",color:"#1a1000",fontSize:9,padding:"2px 7px",borderRadius:20,fontWeight:700}}>+10 pts ✨</span>
+          </div>
+          <select value={lastScorer} onChange={e=>{setLastScorer(e.target.value); onSaveLastScorer(e.target.value)}}
+            style={{width:"100%",padding:"4px 8px",borderRadius:8,border:"1px solid rgba(255,215,0,0.5)",background:"#0d1b2a",color:"#ffd700",fontSize:11,outline:"none"}}>
+            <option value="">— Seleccionar jugador —</option>
+            {[...(SQUADS[match.home]||[]), ...(SQUADS[match.away]||[])].sort().map(p=>(
+              <option key={p} value={p}>{p}</option>
+            ))}
+          </select>
+          <div style={{fontSize:9,color:"#6a8caa",marginTop:6}}>⚠️ Si hay penales, el último gol es el penal decisivo</div>
+        </div>
+      )}
+      {isKnockout && match.id && match.id.startsWith('F_') && locked && pred?.last_scorer && (
+        <div style={{fontSize:11,color:"#ffd700",marginTop:6,display:"flex",alignItems:"center",gap:6}}>
+          🥅 Tu último gol: <strong>{pred.last_scorer}</strong>
+          {result?.last_scorer && (
+            <span style={{fontSize:10,fontWeight:700,color:pred.last_scorer.toLowerCase().trim()===result.last_scorer.toLowerCase().trim()?"#4cdc6a":"#e85555"}}>
+              {pred.last_scorer.toLowerCase().trim()===result.last_scorer.toLowerCase().trim()
+                ? `✅+${isJoker ? POINT_RULES.lastScorer * 2 : POINT_RULES.lastScorer}`
                 : "❌"}
             </span>
           )}
@@ -397,6 +429,14 @@ export default function App() {
             pts += htPts
           }
         }
+        // Anotador último gol (solo Final)
+        if (s.id.startsWith('F_')) {
+          if (pred?.last_scorer && res?.last_scorer &&
+              pred.last_scorer.toLowerCase().trim() === res.last_scorer.toLowerCase().trim()) {
+            const lsPts = pred?.is_joker ? POINT_RULES.lastScorer * 2 : POINT_RULES.lastScorer
+            pts += lsPts
+          }
+        }
       })
       if (userSp.champion && spR.champion && userSp.champion === spR.champion) pts += POINT_RULES.campeon
       if (userSp.top_scorer && spR.top_scorer && userSp.top_scorer.toLowerCase().trim() === spR.top_scorer.toLowerCase().trim()) pts += POINT_RULES.goleador
@@ -469,6 +509,21 @@ export default function App() {
       updated_at: new Date().toISOString()
     }, { onConflict: `user_id,${idField}` })
     setStore(prev => ({ ...prev, [matchId]: { ...prev[matchId], scorer } }))
+  }
+
+  async function saveKoLastScorer(stageId, lastScorer) {
+    const existing = koPredictions[stageId] || {}
+    await supabase.from('knockout_predictions').upsert({
+      user_id: session.user.id, stage_id: stageId,
+      home_score: existing.home_score ?? null, away_score: existing.away_score ?? null,
+      is_joker: existing.is_joker || false,
+      scorer: existing.scorer || null,
+      mvp: existing.mvp || null,
+      halftime_home: existing.halftime_home ?? null, halftime_away: existing.halftime_away ?? null,
+      last_scorer: lastScorer,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id,stage_id' })
+    setKoPredictions(prev => ({ ...prev, [stageId]: { ...prev[stageId], last_scorer: lastScorer } }))
   }
 
   async function saveKoHalftime(stageId, htHome, htAway) {
@@ -552,6 +607,7 @@ export default function App() {
         mvp: p.mvp,
         halftime_home: p.halftime_home,
         halftime_away: p.halftime_away,
+        last_scorer: p.last_scorer,
         is_joker: p.is_joker
       })).sort((a,b) => {
         const rA = rankMap[a.name] ?? 999
@@ -617,6 +673,7 @@ export default function App() {
             <span style={{color:"#4cdc6a"}}>⚽ Primer gol del partido</span><span style={{color:"#4cdc6a",fontWeight:700,textAlign:"right"}}>+{POINT_RULES.primerGol}</span>
             <span style={{color:"#5ec8f5"}}>⭐ MVP (solo eliminatorias)</span><span style={{color:"#5ec8f5",fontWeight:700,textAlign:"right"}}>+{POINT_RULES.mvp}</span>
             <span style={{color:"#c07fff"}}>🕐 Descanso exacto (QF en adelante)</span><span style={{color:"#c07fff",fontWeight:700,textAlign:"right"}}>+{POINT_RULES.halftime}</span>
+            <span style={{color:"#ffd700"}}>🥅 Último gol de la Final</span><span style={{color:"#ffd700",fontWeight:700,textAlign:"right"}}>+{POINT_RULES.lastScorer}</span>
           </div>
         </div>
       </div>
@@ -696,6 +753,7 @@ export default function App() {
                       onSaveScorer={scorer=>savePredScorer(s.id,scorer,true)}
                       onSaveMvp={mvp=>savePredMvp(s.id,mvp)}
                       onSaveHalftime={(h,a)=>saveKoHalftime(s.id,h,a)}
+                      onSaveLastScorer={ls=>saveKoLastScorer(s.id,ls)}
                       onViewPreds={isLocked(s.kickoff)?()=>loadMatchPredictions(s.id,true):null} />
                   )
                 })}
@@ -929,6 +987,18 @@ export default function App() {
                         ))}
                       </select>
                     </div>
+                    {s.id.startsWith('F_') && kt.home_team && kt.away_team && (
+                      <div style={{display:"flex",gap:6,marginTop:8,alignItems:"center"}}>
+                        <span style={{fontSize:11,color:"#ffd700",whiteSpace:"nowrap"}}>🥅 Último gol:</span>
+                        <select value={results[s.id]?.last_scorer||""} onChange={e=>saveResult(s.id,{...results[s.id],last_scorer:e.target.value})}
+                          style={{flex:1,padding:"4px 8px",borderRadius:8,border:"1px solid rgba(255,215,0,0.4)",background:"#0d1b2a",color:"#ffd700",fontSize:11,outline:"none"}}>
+                          <option value="">— Seleccionar jugador —</option>
+                          {[...(SQUADS[kt.home_team]||[]), ...(SQUADS[kt.away_team]||[])].sort().map(p=>(
+                            <option key={p} value={p}>{p}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
                     {(s.id.startsWith('QF') || s.id.startsWith('SF') || s.id.startsWith('F_')) && kt.home_team && kt.away_team && (
                       <div style={{display:"flex",gap:6,marginTop:8,alignItems:"center"}}>
                         <span style={{fontSize:11,color:"#c07fff",whiteSpace:"nowrap"}}>🕐 Descanso:</span>
@@ -1013,7 +1083,9 @@ export default function App() {
                 const mvpPts = isKo && p.mvp && result?.mvp && p.mvp.toLowerCase().trim()===result.mvp.toLowerCase().trim() ? (p.is_joker ? POINT_RULES.mvp * 2 : POINT_RULES.mvp) : 0
                 const isQFplus = isKo && comparingMatch && (comparingMatch.startsWith('QF') || comparingMatch.startsWith('SF') || comparingMatch.startsWith('F_'))
                 const htPts = isQFplus && p.halftime_home != null && p.halftime_away != null && result?.halftime_home != null && p.halftime_home===result.halftime_home && p.halftime_away===result.halftime_away ? (p.is_joker ? POINT_RULES.halftime * 2 : POINT_RULES.halftime) : 0
-                const totalExtra = scorerPts + mvpPts + htPts
+                const isFinal = isKo && comparingMatch && comparingMatch.startsWith('F_')
+                const lsPts = isFinal && p.last_scorer && result?.last_scorer && p.last_scorer.toLowerCase().trim()===result.last_scorer.toLowerCase().trim() ? (p.is_joker ? POINT_RULES.lastScorer * 2 : POINT_RULES.lastScorer) : 0
+                const totalExtra = scorerPts + mvpPts + htPts + lsPts
                 const ptColor = pts > 0 ? "#4cdc6a" : "#e85555"
                 return (
                   <div key={i} style={{background:"rgba(255,255,255,0.05)",borderRadius:12,padding:"12px 14px",border:`1px solid ${p.name===session.user.email||allProfiles.find(pr=>pr.id===session.user.id)?.name===p.name?"rgba(245,200,66,0.4)":"rgba(255,255,255,0.08)"}`}}>
@@ -1024,6 +1096,7 @@ export default function App() {
                         {p.scorer && <div style={{fontSize:11,color:"#ff9500",marginTop:2}}>⚽ {p.scorer} {scorerPts>0?"✅":result?.scorer?"❌":""}</div>}
                         {isKo && p.mvp && <div style={{fontSize:11,color:"#5ec8f5",marginTop:2}}>⭐ {p.mvp} {mvpPts>0?"✅":result?.mvp?"❌":""}</div>}
                         {isQFplus && p.halftime_home != null && <div style={{fontSize:11,color:"#c07fff",marginTop:2}}>🕐 {p.halftime_home}–{p.halftime_away} {htPts>0?"✅":result?.halftime_home!=null?"❌":""}</div>}
+                        {isFinal && p.last_scorer && <div style={{fontSize:11,color:"#ffd700",marginTop:2}}>🥅 {p.last_scorer} {lsPts>0?"✅":result?.last_scorer?"❌":""}</div>}
                         {p.is_joker && <div style={{fontSize:10,color:"#ff9500"}}>🃏 Comodín ×2</div>}
                       </div>
                       <div style={{textAlign:"center",minWidth:70}}>
