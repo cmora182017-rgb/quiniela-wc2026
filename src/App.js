@@ -664,8 +664,39 @@ export default function App() {
   if (!session) return <AuthScreen />
 
   // ─── PODIO FINAL POPUP ─────────────────────────────────────────────────────
-  const PodioModal = () => showPodio ? (
-    <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.88)",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px",zIndex:9999,backdropFilter:"blur(6px)"}}>
+  // ─── CLOSING SCREEN - Block non-admins until 5pm CR ───────────────────────
+  const closingTime = new Date('2026-07-19T23:00:00Z') // 5pm CR = 23:00 UTC
+  const now = new Date()
+  if (!profile?.is_admin && now < closingTime) {
+    return (
+      <div style={{...S.app, display:"flex", alignItems:"center", justifyContent:"center", padding:24}}>
+        <div style={{maxWidth:360, width:"100%", textAlign:"center"}}>
+          <div style={{fontSize:60, marginBottom:16}}>🏆</div>
+          <h1 style={{fontFamily:"Georgia,serif", fontSize:"clamp(1.4rem,6vw,2.2rem)", fontWeight:900, background:"linear-gradient(135deg,#f5c842,#e8a020)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", marginBottom:12}}>
+            ¡La Quiniela ha terminado!
+          </h1>
+          <div style={{background:"rgba(245,200,66,0.08)", border:"1px solid rgba(245,200,66,0.25)", borderRadius:16, padding:"20px 24px", marginBottom:20}}>
+            <div style={{fontSize:14, color:"#aac4e0", lineHeight:1.7, marginBottom:12}}>
+              El partido final ha concluido. Estamos preparando el 
+              <strong style={{color:"#f5c842"}}> podio final y los resultados definitivos</strong>.
+            </div>
+            <div style={{fontSize:13, color:"#6a8caa", marginBottom:8}}>⏰ El podio final se revelará a las</div>
+            <div style={{fontFamily:"Georgia,serif", fontSize:36, fontWeight:900, color:"#f5c842", letterSpacing:2}}>5:00 PM</div>
+            <div style={{fontSize:11, color:"#6a8caa", letterSpacing:2, marginTop:4}}>HORA COSTA RICA · 19 JULIO 2026</div>
+          </div>
+          <div style={{fontSize:12, color:"#6a8caa", fontStyle:"italic"}}>
+            ¡Gracias por participar en esta increíble Quiniela! 🎉<br/>
+            — Carlos Mora · Quiniela Oficina 2026
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ─── HOME ──────────────────────────────────────────────────────────────────
+  if (screen === "home") return (
+    <div style={S.app}>
+      {showPodio && <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.88)",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px",zIndex:9999,backdropFilter:"blur(6px)"}}>
       <div style={{background:"linear-gradient(160deg,#0d1b2a,#1a2744,#0d1b2a)",border:"1px solid rgba(245,200,66,0.3)",borderRadius:24,padding:"28px 22px",width:"100%",maxWidth:380,textAlign:"center",boxShadow:"0 0 60px rgba(245,200,66,0.12)"}}>
         <div style={{fontSize:32,marginBottom:8}}>🎉🏆🎉</div>
         <div style={{fontFamily:"Georgia,serif",fontSize:22,fontWeight:900,background:"linear-gradient(135deg,#f5c842,#e8a020)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:4}}>¡QUINIELA FINALIZADA!</div>
@@ -737,42 +768,7 @@ export default function App() {
           🏆 Ver Tabla de Posiciones Final
         </button>
       </div>
-    </div>
-  ) : null
-
-  // ─── CLOSING SCREEN - Block non-admins until 5pm CR ───────────────────────
-  const closingTime = new Date('2026-07-19T23:00:00Z') // 5pm CR = 23:00 UTC
-  const now = new Date()
-  if (!profile?.is_admin && now < closingTime) {
-    return (
-      <div style={{...S.app, display:"flex", alignItems:"center", justifyContent:"center", padding:24}}>
-        <div style={{maxWidth:360, width:"100%", textAlign:"center"}}>
-          <div style={{fontSize:60, marginBottom:16}}>🏆</div>
-          <h1 style={{fontFamily:"Georgia,serif", fontSize:"clamp(1.4rem,6vw,2.2rem)", fontWeight:900, background:"linear-gradient(135deg,#f5c842,#e8a020)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", marginBottom:12}}>
-            ¡La Quiniela ha terminado!
-          </h1>
-          <div style={{background:"rgba(245,200,66,0.08)", border:"1px solid rgba(245,200,66,0.25)", borderRadius:16, padding:"20px 24px", marginBottom:20}}>
-            <div style={{fontSize:14, color:"#aac4e0", lineHeight:1.7, marginBottom:12}}>
-              El partido final ha concluido. Estamos preparando el 
-              <strong style={{color:"#f5c842"}}> podio final y los resultados definitivos</strong>.
-            </div>
-            <div style={{fontSize:13, color:"#6a8caa", marginBottom:8}}>⏰ El podio final se revelará a las</div>
-            <div style={{fontFamily:"Georgia,serif", fontSize:36, fontWeight:900, color:"#f5c842", letterSpacing:2}}>5:00 PM</div>
-            <div style={{fontSize:11, color:"#6a8caa", letterSpacing:2, marginTop:4}}>HORA COSTA RICA · 19 JULIO 2026</div>
-          </div>
-          <div style={{fontSize:12, color:"#6a8caa", fontStyle:"italic"}}>
-            ¡Gracias por participar en esta increíble Quiniela! 🎉<br/>
-            — Carlos Mora · Quiniela Oficina 2026
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // ─── HOME ──────────────────────────────────────────────────────────────────
-  if (screen === "home") return (
-    <div style={S.app}>
-      <PodioModal />
+    </div>}
       <div style={{textAlign:"center",padding:"48px 20px 24px"}}>
         <div style={{fontSize:56}}>⚽</div>
         <h1 style={{fontSize:"clamp(1.8rem,7vw,3.5rem)",fontWeight:900,letterSpacing:"-2px",margin:"6px 0 0",background:"linear-gradient(135deg,#f5c842,#e8a020)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>WORLD CUP</h1>
