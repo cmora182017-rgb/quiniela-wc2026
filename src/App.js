@@ -664,34 +664,6 @@ export default function App() {
   if (!session) return <AuthScreen />
 
   // ─── PODIO FINAL POPUP ─────────────────────────────────────────────────────
-  // ─── CLOSING SCREEN - Block non-admins until 5pm CR ───────────────────────
-  const closingTime = new Date('2026-07-19T23:00:00Z') // 5pm CR = 23:00 UTC
-  const now = new Date()
-  if (!profile?.is_admin && now < closingTime) {
-    return (
-      <div style={{...S.app, display:"flex", alignItems:"center", justifyContent:"center", padding:24}}>
-        <div style={{maxWidth:360, width:"100%", textAlign:"center"}}>
-          <div style={{fontSize:60, marginBottom:16}}>🏆</div>
-          <h1 style={{fontFamily:"Georgia,serif", fontSize:"clamp(1.4rem,6vw,2.2rem)", fontWeight:900, background:"linear-gradient(135deg,#f5c842,#e8a020)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", marginBottom:12}}>
-            ¡La Quiniela ha terminado!
-          </h1>
-          <div style={{background:"rgba(245,200,66,0.08)", border:"1px solid rgba(245,200,66,0.25)", borderRadius:16, padding:"20px 24px", marginBottom:20}}>
-            <div style={{fontSize:14, color:"#aac4e0", lineHeight:1.7, marginBottom:12}}>
-              El partido final ha concluido. Estamos preparando el 
-              <strong style={{color:"#f5c842"}}> podio final y los resultados definitivos</strong>.
-            </div>
-            <div style={{fontSize:13, color:"#6a8caa", marginBottom:8}}>⏰ El podio final se revelará a las</div>
-            <div style={{fontFamily:"Georgia,serif", fontSize:36, fontWeight:900, color:"#f5c842", letterSpacing:2}}>5:00 PM</div>
-            <div style={{fontSize:11, color:"#6a8caa", letterSpacing:2, marginTop:4}}>HORA COSTA RICA · 19 JULIO 2026</div>
-          </div>
-          <div style={{fontSize:12, color:"#6a8caa", fontStyle:"italic"}}>
-            ¡Gracias por participar en esta increíble Quiniela! 🎉<br/>
-            — Carlos Mora · Quiniela Oficina 2026
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   // ─── HOME ──────────────────────────────────────────────────────────────────
   if (screen === "home") return (
