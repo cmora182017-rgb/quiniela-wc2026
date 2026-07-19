@@ -281,6 +281,7 @@ export default function App() {
   const [koTeams, setKoTeams] = useState({})
   const [specialResults, setSpecialResults] = useState({})
   const [leaderboard, setLeaderboard] = useState([])
+  const [showPodio, setShowPodio] = useState(() => !sessionStorage.getItem('podioSeen'))
   const [allMatchPreds, setAllMatchPreds] = useState({}) // { matchId: [{name, home_score, away_score, scorer, is_joker}] }
   const [comparingMatch, setComparingMatch] = useState(null)
   const [allProfiles, setAllProfiles] = useState([])
@@ -663,8 +664,6 @@ export default function App() {
   if (!session) return <AuthScreen />
 
   // ─── PODIO FINAL POPUP ─────────────────────────────────────────────────────
-  const [showPodio, setShowPodio] = useState(() => !sessionStorage.getItem('podioSeen'))
-
   const PodioModal = () => showPodio ? (
     <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.88)",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px",zIndex:9999,backdropFilter:"blur(6px)"}}>
       <div style={{background:"linear-gradient(160deg,#0d1b2a,#1a2744,#0d1b2a)",border:"1px solid rgba(245,200,66,0.3)",borderRadius:24,padding:"28px 22px",width:"100%",maxWidth:380,textAlign:"center",boxShadow:"0 0 60px rgba(245,200,66,0.12)"}}>
