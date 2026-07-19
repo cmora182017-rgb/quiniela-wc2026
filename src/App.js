@@ -662,6 +662,85 @@ export default function App() {
 
   if (!session) return <AuthScreen />
 
+  // ─── PODIO FINAL POPUP ─────────────────────────────────────────────────────
+  const [showPodio, setShowPodio] = useState(() => !sessionStorage.getItem('podioSeen'))
+
+  const PodioModal = () => showPodio ? (
+    <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.88)",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px",zIndex:9999,backdropFilter:"blur(6px)"}}>
+      <div style={{background:"linear-gradient(160deg,#0d1b2a,#1a2744,#0d1b2a)",border:"1px solid rgba(245,200,66,0.3)",borderRadius:24,padding:"28px 22px",width:"100%",maxWidth:380,textAlign:"center",boxShadow:"0 0 60px rgba(245,200,66,0.12)"}}>
+        <div style={{fontSize:32,marginBottom:8}}>🎉🏆🎉</div>
+        <div style={{fontFamily:"Georgia,serif",fontSize:22,fontWeight:900,background:"linear-gradient(135deg,#f5c842,#e8a020)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:4}}>¡QUINIELA FINALIZADA!</div>
+        <div style={{fontSize:10,letterSpacing:4,textTransform:"uppercase",color:"#4a6080",marginBottom:22}}>Mundial 2026 · Quiniela Oficina</div>
+
+        {/* Podium */}
+        <div style={{display:"flex",alignItems:"flex-end",justifyContent:"center",gap:8,marginBottom:22}}>
+          {/* 2do */}
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3,marginBottom:8}}>
+              <span style={{fontSize:24}}>🥈</span>
+              <span style={{fontFamily:"Georgia,serif",fontWeight:900,fontSize:14,color:"#fff"}}>MAURICIO</span>
+              <span style={{fontFamily:"Georgia,serif",fontSize:22,color:"#c0cdd8",fontWeight:900,lineHeight:1}}>342</span>
+              <span style={{fontSize:8,letterSpacing:2,color:"#4a6080",textTransform:"uppercase"}}>puntos</span>
+              <span style={{fontSize:9,fontStyle:"italic",color:"rgba(192,205,216,0.5)",maxWidth:80,lineHeight:1.3}}>🔄 Lo tirás y vuelve</span>
+            </div>
+            <div style={{background:"rgba(192,205,216,0.08)",border:"1px solid rgba(192,205,216,0.15)",borderRadius:"8px 8px 0 0",width:95,height:60,display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <span style={{fontFamily:"Georgia,serif",fontSize:22,color:"rgba(255,255,255,0.1)",fontWeight:900}}>2</span>
+            </div>
+          </div>
+
+          {/* 1ro */}
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3,marginBottom:8}}>
+              <span style={{fontSize:28}}>🥇</span>
+              <span style={{fontFamily:"Georgia,serif",fontWeight:900,fontSize:16,color:"#fff"}}>KENNETH</span>
+              <span style={{fontFamily:"Georgia,serif",fontSize:28,color:"#f5c842",fontWeight:900,lineHeight:1,textShadow:"0 0 20px rgba(245,200,66,0.4)"}}>345</span>
+              <span style={{fontSize:8,letterSpacing:2,color:"#4a6080",textTransform:"uppercase"}}>puntos</span>
+              <span style={{fontSize:9,fontStyle:"italic",color:"rgba(245,200,66,0.5)",maxWidth:90,lineHeight:1.3}}>🧊 El más frío en la cima</span>
+            </div>
+            <div style={{background:"rgba(245,200,66,0.12)",border:"1px solid rgba(245,200,66,0.25)",borderRadius:"8px 8px 0 0",width:110,height:88,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 0 20px rgba(245,200,66,0.1)"}}>
+              <span style={{fontFamily:"Georgia,serif",fontSize:28,color:"rgba(255,255,255,0.1)",fontWeight:900}}>1</span>
+            </div>
+          </div>
+
+          {/* 3ro */}
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3,marginBottom:8}}>
+              <span style={{fontSize:24}}>🥉</span>
+              <span style={{fontFamily:"Georgia,serif",fontWeight:900,fontSize:14,color:"#fff"}}>CARLOS M.</span>
+              <span style={{fontFamily:"Georgia,serif",fontSize:22,color:"#d4935a",fontWeight:900,lineHeight:1}}>327</span>
+              <span style={{fontSize:8,letterSpacing:2,color:"#4a6080",textTransform:"uppercase"}}>puntos</span>
+              <span style={{fontSize:9,fontStyle:"italic",color:"rgba(212,147,90,0.5)",maxWidth:80,lineHeight:1.3}}>⚓ Capitán del Barco</span>
+            </div>
+            <div style={{background:"rgba(212,147,90,0.08)",border:"1px solid rgba(212,147,90,0.18)",borderRadius:"8px 8px 0 0",width:95,height:45,display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <span style={{fontFamily:"Georgia,serif",fontSize:22,color:"rgba(255,255,255,0.1)",fontWeight:900}}>3</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Prizes */}
+        <div style={{display:"flex",justifyContent:"center",gap:10,marginBottom:18}}>
+          {[{e:"🥇",a:"₡60,000",n:"Kenneth"},{e:"🥈",a:"₡30,000",n:"Mauricio"},{e:"🥉",a:"₡10,000",n:"Carlos M."}].map(p=>(
+            <div key={p.n} style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:12,padding:"8px 10px",display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
+              <span style={{fontSize:14}}>{p.e}</span>
+              <span style={{fontFamily:"Georgia,serif",fontSize:16,fontWeight:900,color:"#f5c842"}}>{p.a}</span>
+              <span style={{fontSize:8,color:"#6a8caa"}}>{p.n}</span>
+            </div>
+          ))}
+        </div>
+
+        <div style={{fontSize:11,color:"#6a8caa",fontStyle:"italic",marginBottom:18,lineHeight:1.6}}>
+          ¡Gracias a todos por hacer de esta quiniela algo increíble! 🌟<br/>
+          <strong style={{color:"rgba(245,200,66,0.6)"}}>— Carlos Mora · Quiniela Oficina 2026</strong>
+        </div>
+
+        <button onClick={()=>{setShowPodio(false);sessionStorage.setItem('podioSeen','true')}}
+          style={{background:"linear-gradient(135deg,#f5c842,#e8a020)",color:"#000",border:"none",borderRadius:14,padding:"13px 24px",fontSize:14,fontWeight:700,cursor:"pointer",width:"100%",letterSpacing:1}}>
+          🏆 Ver Tabla de Posiciones Final
+        </button>
+      </div>
+    </div>
+  ) : null
+
   // ─── CLOSING SCREEN - Block non-admins until 5pm CR ───────────────────────
   const closingTime = new Date('2026-07-19T23:00:00Z') // 5pm CR = 23:00 UTC
   const now = new Date()
@@ -694,6 +773,7 @@ export default function App() {
   // ─── HOME ──────────────────────────────────────────────────────────────────
   if (screen === "home") return (
     <div style={S.app}>
+      <PodioModal />
       <div style={{textAlign:"center",padding:"48px 20px 24px"}}>
         <div style={{fontSize:56}}>⚽</div>
         <h1 style={{fontSize:"clamp(1.8rem,7vw,3.5rem)",fontWeight:900,letterSpacing:"-2px",margin:"6px 0 0",background:"linear-gradient(135deg,#f5c842,#e8a020)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>WORLD CUP</h1>
