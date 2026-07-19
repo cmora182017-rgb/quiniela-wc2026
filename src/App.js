@@ -267,7 +267,7 @@ export default function App() {
 
   const [session, setSession] = useState(null)
   const [profile, setProfile] = useState(null)
-  const [showWelcome, setShowWelcome] = useState(false)
+
   const [loading, setLoading] = useState(true)
   const [screen, setScreen] = useState("home")
   const [tab, setTab] = useState("grupos")
@@ -304,12 +304,7 @@ export default function App() {
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).single()
     setProfile(data)
     setLoading(false)
-    // Show welcome modal once per session
-    const alreadySeen = sessionStorage.getItem('welcomeSeen')
-    if (!alreadySeen) {
-      setShowWelcome(true)
-      sessionStorage.setItem('welcomeSeen', 'true')
-    }
+
   }
 
   // Load all data
@@ -696,30 +691,9 @@ export default function App() {
     )
   }
 
-  // ─── WELCOME MODAL ─────────────────────────────────────────────────────────
-  const WelcomeModal = () => showWelcome ? (
-    <div style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.75)",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px",zIndex:9999,backdropFilter:"blur(4px)"}}>
-      <div style={{background:"linear-gradient(135deg,#0d1b2a,#1a2744)",border:"1px solid rgba(245,200,66,0.3)",borderRadius:20,padding:"28px 24px",width:"100%",maxWidth:360,textAlign:"center",boxShadow:"0 0 40px rgba(245,200,66,0.1)"}}>
-        <div style={{fontSize:36,marginBottom:10}}>🏆⚽🏆</div>
-        <div style={{fontSize:17,fontWeight:900,color:"#f5c842",marginBottom:10,lineHeight:1.2}}>¡Gracias por ser parte de esta Quiniela!</div>
-        <div style={{fontSize:13,color:"#aac4e0",lineHeight:1.6,marginBottom:10}}>
-          Un Mundial entero juntos, partido a partido. Gracias por la pasión, la competencia y los buenos momentos que compartimos en cada resultado.
-          <br/><br/>
-          <strong style={{color:"#f5c842"}}>¡Hoy es la Gran Final!</strong> Que disfruten el último partido y que gane el mejor pronosticador. 🎯
-        </div>
-        <div style={{fontSize:12,color:"rgba(245,200,66,0.6)",fontStyle:"italic",marginBottom:18}}>— Carlos Mora · Quiniela Oficina 2026</div>
-        <button onClick={()=>setShowWelcome(false)}
-          style={{background:"linear-gradient(135deg,#f5c842,#e8a020)",color:"#000",border:"none",borderRadius:12,padding:"12px 24px",fontSize:14,fontWeight:700,cursor:"pointer",width:"100%"}}>
-          🔥 ¡Vamos a la Final!
-        </button>
-      </div>
-    </div>
-  ) : null
-
   // ─── HOME ──────────────────────────────────────────────────────────────────
   if (screen === "home") return (
     <div style={S.app}>
-      <WelcomeModal />
       <div style={{textAlign:"center",padding:"48px 20px 24px"}}>
         <div style={{fontSize:56}}>⚽</div>
         <h1 style={{fontSize:"clamp(1.8rem,7vw,3.5rem)",fontWeight:900,letterSpacing:"-2px",margin:"6px 0 0",background:"linear-gradient(135deg,#f5c842,#e8a020)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>WORLD CUP</h1>
